@@ -76,17 +76,17 @@
                         var len = rowsArray.length, i;
                         if (len > 0) {
                             for (i = 0; i < len; i++) {
-                                var pictureHtml = '<div class="row docPages"><div class="col-sm-6">';
+                                var pictureHtml = '';
                                 pictureHtml += '<div class="panel panel-default">';
-                                pictureHtml += '<div class="panel-heading"><h4 class="docTitle">Page No. ' + rowsArray[i].DocTitle + '</h4></div>';
+                                pictureHtml += '<div class="panel-heading"><h4 class="docTitle">' + rowsArray[i].DocTitle + '</h4></div>';
                                 pictureHtml += '<div class="panel-body">';
                                 pictureHtml += '<div class="clearfix"></div>';
-                                pictureHtml += '<img src="' + rowsArray[i].DocName + '" title="Page No. ' + rowsArray[i].DocTitle + '" class="docPicture" style="width:100%;" />';
-                                pictureHtml += '</div></div></div></div>';
-                                $("#docWrapper").append(pictureHtml);
-
-                                $("#errorWell").html('<p style="color:gree;">Document details published sucessfully!!</p>');
+                                pictureHtml += '<img src="' + rowsArray[i].DocName + '" title="' + rowsArray[i].DocTitle + '" class="docPicture" style="width:100%;" />';
+                                pictureHtml += '</div></div>';
+                                $("#docDetailsHolder").append(pictureHtml);
                             }
+
+                            $("#errorWell").html('<p style="color:green;">Document details published sucessfully!!</p>');
                         }
                         else {
                             $("#errorWell").html('<p style="color:red;">showDetails: No Record Found.</p>');
