@@ -53,6 +53,8 @@
                                         Next</button><br />
                                 </div>
                             </div>
+                            <div class="well" id="errorWell">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -63,6 +65,28 @@
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
         <script type="text/javascript">
+            document.addEventListener("deviceready", onDeviceReady, false);
+
+            function onDeviceReady() {
+                try {
+                    html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+
+                    html5sql.process(
+                   [
+                    "CREATE TABLE IF NOT EXISTS DealersEnteries (EnteryId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryName, CreationDate);",
+                    "CREATE TABLE IF NOT EXISTS DealersDocs (DocId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryId , DocTitle, DocName, CreationDate);"
+                   ],
+                   function () {
+                       $("#errorWell").html('<p style="color:green;">Application is ready!!</p>');
+                   },
+                   function () {
+                       $("#errorWell").html('<p style="color:red;">PopulateDatabase: db creation error<p>');
+                   });
+                } catch (e) {
+                    $("#errorWell").html('<p style="color:red;">PopulateDatabase;Error: ' + e);
+                }
+            }
+
             function onNextClick() {
                 location = "addDoc.html?DealersName=" + $("#txtDealersName").val();
             }
