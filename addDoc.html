@@ -82,7 +82,8 @@
             }
 
             function saveDocuments() {
-                var msgString = '';
+
+                var msgString = '<p style="color:green;">saveDocuments starts here!!</p><br/>';
 
                 try {
 
@@ -100,6 +101,7 @@
                        msgString += '<p style="color:green;">Dealer No. ' + results.insertId + ' has been saved successfully!!</p><br/>';
 
                        msgString += '<p style="color:green;">No Of Images Found: ' + $(".docPicture").length + '!!</p><br/>';
+                       $("#errorWell").html(msgString);
 
                        $(".docPicture").each(function () {
                            var docTitle = $(this).attr("title");
@@ -111,24 +113,29 @@
                            ],
                            function (transactionInner, resultsInner, rowsArrayInner) {
                                msgString += '<p style="color:green;">Document No. ' + resultsInner.insertId + ' has been saved successfully!!</p><br/>';
+                               $("#errorWell").html(msgString);
                            },
                            function () {
                                msgString += '<p style="color:red;">Error occured while saving Document No. ' + resultsInner.insertId + ' !!</p><br/>';
+                               $("#errorWell").html(msgString);
                            });
                        });
 
                        msgString += '<p style="color:green;">Document & Dealers has been saved successfully!!</p><br/>';
 
+                       $("#errorWell").html(msgString);
                        //location = "index.html";
                    },
                    function () {
                        msgString += '<p style="color:red;">addDealersEntery: db creation error!!</p><br/>';
+                       $("#errorWell").html(msgString);
                    });
                 } catch (e) {
                    msgString += '<p style="color:red;">PopulateDatabase;Error: ' + e + '<br/>';
+                   $("#errorWell").html(msgString);
                 }
 
-                $("#errorWell").html(msgString);
+                
             }
 
             function getCurrentDateAndTime() {
