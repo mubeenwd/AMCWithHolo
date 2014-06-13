@@ -82,7 +82,10 @@
             }
 
             function saveDocuments() {
+                var msgString = '';
+
                 try {
+
                     var currentDate = getCurrentDateAndTime();
 
                     _dealersName = getParameterByName("DealersName");
@@ -94,6 +97,8 @@
                     "INSERT INTO DealersEnteries (EnteryName, CreationDate) VALUES('" + _dealersName + "','" + currentDate + "');",
                    ],
                    function (transaction, results, rowsArray) {
+                       msgString += '<p style="color:green;">Dealer No. ' + results.insertId + ' has been saved successfully!!</p><br/>';
+
                        $(".docPicture").each(function () {
                            var docTitle = $(this).attr("title");
                            var docSrc = $(this).attr("src");
@@ -102,24 +107,26 @@
                            [
                             "INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + currentDate + "');",
                            ],
-                           function () {
-
+                           function (transactionInner, resultsInner, rowsArrayInner) {
+                               msgString += '<p style="color:green;">Document No. ' + resultsInner.insertId + ' has been saved successfully!!</p><br/>';
                            },
                            function () {
-
+                               msgString += '<p style="color:red;">Error occured while saving Document No. ' + resultsInner.insertId + ' !!</p><br/>';
                            });
                        });
 
-                       $("#errorWell").html('<p style="color:green;">Document has been saved successfully!!</p>');
+                       msgString += '<p style="color:green;">Document & Dealers has been saved successfully!!</p><br/>';
 
-                       location = "index.html";
+                       //location = "index.html";
                    },
                    function () {
-                       $("#errorWell").html('<p style="color:red;">addDealersEntery: db creation error</p>');
+                       msgString += '<p style="color:red;">addDealersEntery: db creation error!!</p><br/>';
                    });
                 } catch (e) {
-                    $("#errorWell").html('<p style="color:red;">PopulateDatabase;Error: ' + e);
+                   msgString += '<p style="color:red;">PopulateDatabase;Error: ' + e + '<br/>';
                 }
+
+                $("#errorWell").html(msgString);
             }
 
             function getCurrentDateAndTime() {
