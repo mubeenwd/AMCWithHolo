@@ -99,6 +99,8 @@
                    function (transaction, results, rowsArray) {
                        msgString += '<p style="color:green;">Dealer No. ' + results.insertId + ' has been saved successfully!!</p><br/>';
 
+                       msgString += '<p style="color:green;">No Of Images Found: ' + $(".docPicture").length + '!!</p><br/>';
+
                        $(".docPicture").each(function () {
                            var docTitle = $(this).attr("title");
                            var docSrc = $(this).attr("src");
