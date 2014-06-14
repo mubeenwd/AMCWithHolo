@@ -71,7 +71,7 @@
                     ],
                     function (transaction, results, rowsArray) {
                         var len = results.length, i;
-                        alert("Document Added : " + len);
+                        alert("results.length : " + results.length + ", " + "rowsArray.length : " + rowsArray.length);
                         if (len > 0) {
                             for (i = 0; i < len; i++) {
                                 pictureHtml = '<div class="row docPages"><div class="col-sm-6">';
