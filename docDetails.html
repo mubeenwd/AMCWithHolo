@@ -70,10 +70,9 @@
                     "SELECT * FROM DealersDocs WHERE EnteryId='" + _enteryId + "'",
                     ],
                     function (transaction, results, rowsArray) {
-                        var len = rowsArray.length, i;
-
+                        var len = results.length, i;
+                        alert("Document Added : " + len);
                         if (len > 0) {
-                            
                             for (i = 0; i < len; i++) {
                                 pictureHtml = '<div class="row docPages"><div class="col-sm-6">';
                                 pictureHtml += '<div class="panel panel-default">';

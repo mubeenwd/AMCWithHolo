@@ -98,7 +98,7 @@
                     "INSERT INTO DealersEnteries (EnteryName, CreationDate) VALUES('" + _dealersName + "','" + currentDate + "');",
                    ],
                    function (transaction, results, rowsArray) {
-                       alert('Dealer No. ' + results.insertId + ' has been saved successfully!!No Of Images Found: ' + $(".docPicture").lengt);
+                       alert('Dealer No. ' + results.insertId + ' has been saved successfully!!No Of Images Found: ' + $(".docPicture").length);
 
                        $(".docPicture").each(function () {
                            var docTitle = $(this).attr("title");
@@ -117,7 +117,7 @@
                        });
 
                        alert('Document & Dealers has been saved successfully!!');
-                       $("#wrapper").html('');
+                       $(".docPages").remove();
                        //location = "index.html";
                    },
                    function () {
