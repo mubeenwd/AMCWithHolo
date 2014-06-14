@@ -119,7 +119,7 @@
 
                             html5sql.process(
                            [
-                            "INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + currentDate + "');",
+                            "INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + dealerId + ",'" + docTitle + "','" + docSrc + "','" + currentDate + "');",
                            ],
                            function (transactionInner, resultsInner, rowsArrayInner) {
                                alert('Document No. ' + resultsInner.insertId + ' has been saved successfully!!');
