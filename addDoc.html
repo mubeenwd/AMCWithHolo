@@ -54,6 +54,7 @@
                             </div>
                             <div class="well" id="errorWell">
                             </div>
+                            <input type="hidden" id="lastInsertedId" value="0" />
                         </div>
                     </div>
                 </div>
@@ -64,6 +65,23 @@
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
         <script type="text/javascript">
+
+            $(function () {
+                var currentDate = getCurrentDateAndTime();
+
+                _dealersName = getParameterByName("DealersName");
+
+                html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+
+                html5sql.process(
+                   [
+                    "INSERT INTO DealersEnteries (EnteryName, CreationDate) VALUES('" + _dealersName + "','" + currentDate + "');",
+                   ],
+                   function (transaction, results, rowsArray) {
+                       alert('Dealer No. ' + results.insertId + ' has been saved successfully!!No Of Images Found: ' + $(".docPicture").length);
+                       $("#lastInsertedId").val(results.insertId);
+                   });
+            });
 
             function capturePhoto() {
                 navigator.camera.getPicture(onPhotoUriSuccess, null, { sourceType: 1, quality: 50, destinationType: Camera.DestinationType.FILE_URI });
@@ -86,25 +104,20 @@
                 alert('saveDocuments starts here!!');
 
                 try {
+                    var dealerId = $("#lastInsertedId").val();
 
-                    var currentDate = getCurrentDateAndTime();
+                    alert(dealerId);
 
-                    _dealersName = getParameterByName("DealersName");
+                    if (dealerId > 0) {
+                        var currentDate = getCurrentDateAndTime();
 
-                    html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+                        $(".docPicture").each(function () {
+                            var docTitle = $(this).attr("title");
+                            var docSrc = $(this).attr("src");
 
-                    html5sql.process(
-                   [
-                    "INSERT INTO DealersEnteries (EnteryName, CreationDate) VALUES('" + _dealersName + "','" + currentDate + "');",
-                   ],
-                   function (transaction, results, rowsArray) {
-                       alert('Dealer No. ' + results.insertId + ' has been saved successfully!!No Of Images Found: ' + $(".docPicture").length);
+                            html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
 
-                       $(".docPicture").each(function () {
-                           var docTitle = $(this).attr("title");
-                           var docSrc = $(this).attr("src");
-
-                           html5sql.process(
+                            html5sql.process(
                            [
                             "INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + currentDate + "');",
                            ],
@@ -114,18 +127,13 @@
                            function () {
                                alert('Error occured while saving Document No. ' + resultsInner.insertId + ' !!');
                            });
-                       });
-
-                       alert('Document & Dealers has been saved successfully!!');
-                       $(".docPages").remove();
-                       //location = "index.html";
-                   },
-                   function () {
-                       alert('addDealersEntery: db creation error!!');
-
-                   });
+                        });
+                    }
+                    else {
+                        alert('Error occured while saving Dealer!!');
+                    }
                 } catch (e) {
-                   alert('addDealersEntery;Error: ' + e);
+                    alert('addDealersEntery;Error: ' + e);
                 }
             }
 
