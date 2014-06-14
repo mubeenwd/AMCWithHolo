@@ -78,9 +78,12 @@
                     "INSERT INTO DealersEnteries (EnteryName, CreationDate) VALUES('" + _dealersName + "','" + currentDate + "');",
                    ],
                    function (transaction, results, rowsArray) {
-                       alert('Dealer No. ' + results.insertId + ' has been saved successfully!!No Of Images Found: ' + $(".docPicture").length);
+                       $("#errorWell").html('<p style="color:green;">' + _dealersName + ' has been saved successfully start capturing docs!!');
                        $("#lastInsertedId").val(results.insertId);
-                   });
+                   },
+                    function () {
+                        $("#errorWell").html('<p style="color:red;">Error occured while saving ' + _dealersName + '. Please go back and start from the scratch!!');
+                    });
             });
 
             function capturePhoto() {
@@ -100,40 +103,32 @@
             }
 
             function saveDocuments() {
-
-                alert('saveDocuments starts here!!');
-
                 try {
                     var dealerId = $("#lastInsertedId").val();
 
-                    alert(dealerId);
-
                     if (dealerId > 0) {
                         var currentDate = getCurrentDateAndTime();
+                        var insertScript = [];
 
                         $(".docPicture").each(function () {
                             var docTitle = $(this).attr("title");
                             var docSrc = $(this).attr("src");
+                            insertScript.push("INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + dealerId + ",'" + docTitle + "','" + docSrc + "','" + currentDate + "');");
+                        });
 
-                            html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+                        html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
 
-                            html5sql.process(
-                           [
-                            "INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + dealerId + ",'" + docTitle + "','" + docSrc + "','" + currentDate + "');",
-                           ],
+                        html5sql.process(
+                           insertScript,
                            function (transactionInner, resultsInner, rowsArrayInner) {
-                               alert('Document No. ' + resultsInner.insertId + ' has been saved successfully!!');
+                               location = "viewDocs.html";
                            },
                            function () {
-                               alert('Error occured while saving Document No. ' + resultsInner.insertId + ' !!');
+                               $("#errorWell").html('<p style="color:red;">Error occured while saving Document No. ' + resultsInner.insertId + ' !!');
                            });
-                        });
-                    }
-                    else {
-                        alert('Error occured while saving Dealer!!');
                     }
                 } catch (e) {
-                    alert('addDealersEntery;Error: ' + e);
+                    $("#errorWell").html('<p style="color:red;">addDealersEntery;Error: ' + e);
                 }
             }
 
