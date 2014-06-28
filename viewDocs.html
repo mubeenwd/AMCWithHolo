@@ -128,6 +128,9 @@
                                     alert(data.Error);
                                 }
                             }
+                        },
+                        error: function (a, b, c) {
+                            alert(a + ", " + b + ", " + c);
                         }
                     });
 
@@ -148,13 +151,12 @@
                                     var creationDate = rowsArray[i].CreationDate;
 
                                     window.resolveLocalFileSystemURI(rowsArray[i].DocName, function (fileEntry) {
-                                        alert("file got image file entry: " + fileEntry.fullPath);
                                         fileEntry.file(function (file) {
                                             var reader = new FileReader();
                                             reader.onloadend = function (evt) {
-                                                alert("file Read complete!");
                                                 var imageData = Base64.encode(evt.target.result);
                                                 innerData.push({ DocTitle: docTitle, CreationDate: creationDate, ImageData: imageData, EnteryId: RecordId });
+                                                alert("file read complete the size is: " + imageData.length + "innerData: " + innerData);
                                             };
                                             reader.readAsText(file);
                                         }, function () { alert("file inner error"); });
@@ -172,8 +174,6 @@
                         alert(e);
                     }
                 });
-
-                alert(innerData.length);
             }
             
         </script>
