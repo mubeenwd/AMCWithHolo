@@ -53,11 +53,15 @@
             $(function () {
                 _enteryId = getParameterByName("enteryId");
                 _enteryName = getParameterByName("enteryName");
+                _billingDate = getParameterByName("billingDate");
+                _billingAmt = getParameterByName("billingAmt");
 
                 var pictureHtml = '<div class="row docPages"><div class="col-sm-6">';
                 pictureHtml += '<div class="panel panel-default">';
-                pictureHtml += '<div class="panel-heading"><h4 class="docTitle">' + _enteryName + '</h4></div>';
-                pictureHtml += '<div class="panel-body">';
+                pictureHtml += '<div class="panel-heading"><h4 class="docTitle">' + _enteryName + '</h4>';
+                pictureHtml += '<button class="btn btn-info pull-left" type="button">' + _billingDate + '</button>';
+                pictureHtml += '<button class="btn btn-info pull-right" type="button">' + _billingAmt + '</button><br /><br />';
+                pictureHtml += '</div><div class="panel-body">';
                 pictureHtml += '<div class="clearfix"></div>';
                 pictureHtml += '<p style="color:grey;">See list of pages below!!</p>';
                 pictureHtml += '</div></div></div></div>';
