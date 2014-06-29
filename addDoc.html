@@ -73,19 +73,21 @@
                 _dealersName = getParameterByName("DealersName");
                 _billingAmt = getParameterByName("BillingAmt");
                 _billingDate = getParameterByName("BillingDate");
-                
+
                 html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+
+                var strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + _dealersName + "','" + currentDate + "'" + "','" + _billingDate + "'" + "','" + _billingAmt + "');";
 
                 html5sql.process(
                    [
-                    "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + _dealersName + "','" + currentDate + "'" + "','" + _billingDate + "'" + "','" + _billingAmt + "');",
+                    strCommand
                    ],
                    function (transaction, results, rowsArray) {
                        $("#errorWell").html('<p style="color:green;">' + _dealersName + ' has been saved successfully start capturing docs!!');
                        $("#lastInsertedId").val(results.insertId);
                    },
                     function () {
-                        $("#errorWell").html('<p style="color:red;">Error occured while saving ' + _dealersName + '. Please go back and start from the scratch!!');
+                        $("#errorWell").html('<p style="color:red;">Error occured while saving ' + _dealersName + '. Please go back and start from the scratch!!' + '<br/>' + strCommand);
                     });
             });
 
