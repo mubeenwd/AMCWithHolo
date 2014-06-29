@@ -108,13 +108,15 @@
                     var dataEnteryId = $(this).attr("data-entery-id");
                     var dataEnteryName = $(this).attr("data-entery-name");
                     var dataEnteryDate = $(this).attr("data-entery-date");
+                    var dataBillingDate = $(this).attr("data-billing-date");
+                    var dataBillingAmt = $(this).attr("data-billing-amt");
 
                     $.ajax({
                         crossDomain: true,
                         async: false,
                         type: "POST",
-                        url: "http://www.docs.mubeen.in/Services/DocuSave.asmx/SaveDocument",
-                        data: JSON.stringify({ dataEnteryName: dataEnteryName, dataEnteryDate: dataEnteryDate }),
+                        url: "http://docs.mubeen.in/Services/DocuSave.asmx/SaveDocument",
+                        data: JSON.stringify({ dataEnteryName: dataEnteryName, dataEnteryDate: dataEnteryDate, dataBillingDate: dataBillingDate, dataBillingAmt: dataBillingAmt }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {
@@ -135,10 +137,13 @@
 
                     var imageURI = '';
 
-                    try {
-                        html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+                    alert(RecordId);
 
-                        html5sql.process(
+                    if (RecordId>0) {
+                        try {
+                            html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+
+                            html5sql.process(
                         [
                         "SELECT * FROM DealersDocs WHERE EnteryId=" + dataEnteryId + ";",
                         ],
@@ -169,9 +174,12 @@
                         function () {
                             alert("transaction error");
                         });
-                    } catch (e) {
-                        alert(e);
+                        } catch (e) {
+                            alert(e);
+                        }
                     }
+
+                    
                 });
             }
             

@@ -73,7 +73,7 @@
                 _dealersName = getParameterByName("DealersName");
                 _billingAmt = getParameterByName("BillingAmt");
                 _billingDate = getParameterByName("BillingDate");
-
+                _billingDate += getCurrentTime();
                 html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
 
                 var strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + _dealersName + "','" + currentDate + "','" + _billingDate + "','" + _billingAmt + "');";
@@ -143,6 +143,16 @@
                 var datetime = currentdate.getDate() + "/"
                 + (currentdate.getMonth() + 1) + "/"
                 + currentdate.getFullYear() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+
+                return datetime;
+            }
+
+            function getCurrentTime() {
+                var currentdate = new Date();
+                var datetime = " @ "
                 + currentdate.getHours() + ":"
                 + currentdate.getMinutes() + ":"
                 + currentdate.getSeconds();
