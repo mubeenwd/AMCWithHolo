@@ -110,7 +110,7 @@
                     var dataEnteryDate = $(this).attr("data-entery-date");
                     var dataBillingDate = $(this).attr("data-billing-date");
                     var dataBillingAmt = $(this).attr("data-billing-amt");
-                    
+
                     $.ajax({
                         crossDomain: true,
                         async: false,
@@ -161,7 +161,7 @@
                                             reader.onloadend = function (evt) {
                                                 var imageData = Base64.encode(evt.target.result);
                                                 innerData.push({ DocTitle: docTitle, CreationDate: creationDate, ImageData: imageData, EnteryId: RecordId, dataEnteryName: dataEnteryName });
-                                                alert("file read complete the size is: " + imageData.length + "innerData: " + innerData);
+                                                alert("file read complete the size is: " + imageData.length + "innerData: " + JSON.stringify(innerData));
                                             };
                                             reader.readAsText(file);
                                         }, function () { alert("file inner error"); });
