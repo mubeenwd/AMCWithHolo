@@ -110,7 +110,7 @@
                     var dataEnteryDate = $(this).attr("data-entery-date");
                     var dataBillingDate = $(this).attr("data-billing-date");
                     var dataBillingAmt = $(this).attr("data-billing-amt");
-
+                    
                     $.ajax({
                         crossDomain: true,
                         async: false,
@@ -120,10 +120,11 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {
+                            alert(JSON.stringify(msg));
                             if (msg != null) {
                                 data = $.parseJSON(msg.d);
                                 if (!data.HasError) {
-                                    RecordId = data[0].RecordId;
+                                    RecordId = data[0].Result;
                                 }
                                 else {
                                     alert(data.Error);
@@ -139,7 +140,7 @@
 
                     alert(RecordId);
 
-                    if (RecordId>0) {
+                    if (RecordId > 0) {
                         try {
                             html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
 
@@ -179,7 +180,7 @@
                         }
                     }
 
-                    
+
                 });
             }
             
