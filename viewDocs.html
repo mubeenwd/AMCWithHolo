@@ -123,6 +123,8 @@
                         success: function (msg) {
                             if (msg != null) {
                                 data = $.parseJSON(msg.d);
+                                alert(JSON.stringify(data));
+                                alert(data[0].Result + data.Result);
                                 if (data[0].Result > 0) {
                                     RecordId = data[0].Result;
                                     var imageURI = '';
