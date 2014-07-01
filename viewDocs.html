@@ -121,11 +121,50 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {
-
                             if (msg != null) {
                                 data = $.parseJSON(msg.d);
                                 if (data[0].Result > 0) {
                                     RecordId = data[0].Result;
+                                    var imageURI = '';
+                                    try {
+
+                                        html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+
+                                        html5sql.process(
+                                        [
+                                        "SELECT * FROM DealersDocs WHERE EnteryId=" + dataEnteryId + ";",
+                                        ],
+                                    function (transaction, results, rowsArray) {
+                                        var len = rowsArray.length, i;
+                                        alert("rowsArray.length: " + len);
+                                        if (len > 0) {
+                                            for (i = 0; i < len; i++) {
+                                                var docTitle = rowsArray[i].DocTitle;
+                                                var creationDate = rowsArray[i].CreationDate;
+
+                                                window.resolveLocalFileSystemURI(rowsArray[i].DocName, function (fileEntry) {
+                                                    fileEntry.file(function (file) {
+                                                        var reader = new FileReader();
+                                                        reader.onloadend = function (evt) {
+                                                            var imageData = Base64.encode(evt.target.result);
+                                                            innerData.push({ DocTitle: docTitle, CreationDate: creationDate, ImageData: imageData, EnteryId: RecordId, dataEnteryName: dataEnteryName });
+                                                            alert("file read complete the size is: " + imageData.length + "innerData size: " + innerData.length);
+                                                        };
+                                                        reader.readAsText(file);
+                                                    }, function () { alert("file inner error"); });
+                                                }, function () { alert("file outer error"); });
+                                            }
+                                        }
+                                        else {
+                                            alert("No reocrd found!!");
+                                        }
+                                    },
+                                    function () {
+                                        alert("transaction error");
+                                    });
+                                    } catch (e) {
+                                        alert(e);
+                                    }
                                 }
                                 else {
                                     alert(data.Error);
@@ -136,52 +175,6 @@
                             alert(a + ", " + b + ", " + c);
                         }
                     });
-
-                    var imageURI = '';
-
-                    if (RecordId > 0) {
-                        try {
-                            
-                            alert(RecordId);
-
-                            html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
-
-                            html5sql.process(
-                            [
-                            "SELECT * FROM DealersDocs WHERE EnteryId=" + dataEnteryId + ";",
-                            ],
-                        function (transaction, results, rowsArray) {
-                            var len = rowsArray.length, i;
-                            alert("rowsArray.length: " + len);
-                            if (len > 0) {
-                                for (i = 0; i < len; i++) {
-                                    var docTitle = rowsArray[i].DocTitle;
-                                    var creationDate = rowsArray[i].CreationDate;
-
-                                    window.resolveLocalFileSystemURI(rowsArray[i].DocName, function (fileEntry) {
-                                        fileEntry.file(function (file) {
-                                            var reader = new FileReader();
-                                            reader.onloadend = function (evt) {
-                                                var imageData = Base64.encode(evt.target.result);
-                                                innerData.push({ DocTitle: docTitle, CreationDate: creationDate, ImageData: imageData, EnteryId: RecordId, dataEnteryName: dataEnteryName });
-                                                alert("file read complete the size is: " + imageData.length + "innerData size: " + innerData.length);
-                                            };
-                                            reader.readAsText(file);
-                                        }, function () { alert("file inner error"); });
-                                    }, function () { alert("file outer error"); });
-                                }
-                            }
-                            else {
-                                alert("No reocrd found!!");
-                            }
-                        },
-                        function () {
-                            alert("transaction error");
-                        });
-                        } catch (e) {
-                            alert(e);
-                        }
-                    }
                 });
             }
             
