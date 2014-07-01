@@ -103,7 +103,7 @@
                 var innerData = [];
 
                 $("#docList a").each(function () {
-                    
+
                     var RecordId = 0;
 
                     var dataEnteryId = $(this).attr("data-entery-id");
@@ -121,7 +121,7 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {
-                            alert(JSON.stringify(msg));
+
                             if (msg != null) {
                                 data = $.parseJSON(msg.d);
                                 if (data[0].Result > 0) {
@@ -139,16 +139,17 @@
 
                     var imageURI = '';
 
-                    alert(RecordId);
-
                     if (RecordId > 0) {
                         try {
+                            
+                            alert(RecordId);
+
                             html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
 
                             html5sql.process(
-                        [
-                        "SELECT * FROM DealersDocs WHERE EnteryId=" + dataEnteryId + ";",
-                        ],
+                            [
+                            "SELECT * FROM DealersDocs WHERE EnteryId=" + dataEnteryId + ";",
+                            ],
                         function (transaction, results, rowsArray) {
                             var len = rowsArray.length, i;
                             if (len > 0) {
