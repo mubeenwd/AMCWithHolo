@@ -123,8 +123,12 @@
                         success: function (msg) {
                             if (msg != null) {
                                 data = $.parseJSON(msg.d);
-                                alert("data: " + JSON.stringify(data));
-                                alert("Result: " + data[0].Result + data.Result);
+                                try {
+                                    alert("data: " + JSON.stringify(data));
+                                    alert("Result: " + data[0].Result + data.Result);
+                                } catch (e) {
+                                    alert(e);
+                                }
 
                                 if (data[0].Result > 0) {
                                     RecordId = data[0].Result;
