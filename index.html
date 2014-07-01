@@ -54,12 +54,15 @@
                                         <input type="number" class="form-control" id="txtBillingAmt" placeholder="Enter bill chased amount here." />
                                     </div>
                                     <div class="form-group" style="padding: 10px,14px,10px, 14px;">
+                                    <label>Date: </label>
                                         <select id="ddlDay" class="form-control" style="color: Black;">
                                             <option value="-1" selected="selected">Date</option>
                                         </select>
+                                        <label>Month: </label>
                                         <select id="ddlMonth" class="form-control" style="color: Black;">
                                             <option value="-1" selected="selected">Month</option>
                                         </select>
+                                        <label>Year: </label>
                                         <select id="ddlYear" class="form-control" style="color: Black;">
                                             <option value="-1" selected="selected">year</option>
                                         </select>
@@ -107,6 +110,8 @@
                     $("#ddlYear").append("<option value=\"" + j + "\">" + j + "</option>");
                 }
 
+                debugger;
+
                 var currentdate = new Date();
 
                 var date = currentdate.getDate();
@@ -125,8 +130,8 @@
                     year = "0" + year;
                 }
 
-                $("#ddlMonth").val(day);
-                $("#ddlDay").val(month);
+                $("#ddlDay").val(date);
+                $("#ddlMonth").val(month);
                 $("#ddlYear").val(year);
             });
 
