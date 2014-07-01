@@ -114,7 +114,7 @@
                 var year = currentdate.getFullYear();
 
                 if (date < 10) {
-                    data = "0" + data;
+                    date = "0" + date;
                 }
 
                 if (month < 10) {
@@ -124,7 +124,7 @@
                 if (year < 10) {
                     year = "0" + year;
                 }
-                
+
                 $("#ddlMonth").val(day);
                 $("#ddlDay").val(month);
                 $("#ddlYear").val(year);
