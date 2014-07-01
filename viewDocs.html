@@ -162,7 +162,7 @@
                                             reader.onloadend = function (evt) {
                                                 var imageData = Base64.encode(evt.target.result);
                                                 innerData.push({ DocTitle: docTitle, CreationDate: creationDate, ImageData: imageData, EnteryId: RecordId, dataEnteryName: dataEnteryName });
-                                                alert("file read complete the size is: " + imageData.length + "innerData: " + JSON.stringify(innerData));
+                                                alert("file read complete the size is: " + imageData.length + "innerData size: " + innerData.length);
                                             };
                                             reader.readAsText(file);
                                         }, function () { alert("file inner error"); });
