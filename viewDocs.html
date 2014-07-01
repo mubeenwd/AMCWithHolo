@@ -142,7 +142,7 @@
 
                                                 window.resolveLocalFileSystemURI(rowsArray[i].DocName,
                                                 function (fileEntry) {
-                                                    console.log("got image file entry: " + fileEntry.fullPath);
+                                                    alert("got image file entry: " + fileEntry.fullPath);
                                                     fileEntry.file(function (file) {
                                                         var reader = new FileReader();
                                                         reader.onloadend = function (evt) {
