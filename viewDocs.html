@@ -111,6 +111,8 @@
                     var dataBillingDate = $(this).attr("data-billing-date");
                     var dataBillingAmt = $(this).attr("data-billing-amt");
 
+                    alert(JSON.stringify({ dataEnteryName: dataEnteryName, dataEnteryDate: dataEnteryDate, dataBillingDate: dataBillingDate, dataBillingAmt: dataBillingAmt }));
+
                     $.ajax({
                         crossDomain: true,
                         async: false,
@@ -123,7 +125,7 @@
                             alert(JSON.stringify(msg));
                             if (msg != null) {
                                 data = $.parseJSON(msg.d);
-                                if (!data.HasError) {
+                                if (data.Result > 0) {
                                     RecordId = data[0].Result;
                                 }
                                 else {
@@ -179,8 +181,6 @@
                             alert(e);
                         }
                     }
-
-
                 });
             }
             
