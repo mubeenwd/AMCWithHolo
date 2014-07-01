@@ -127,7 +127,6 @@
                                     RecordId = data[0].Result;
                                     var imageURI = '';
                                     try {
-
                                         html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
 
                                         html5sql.process(
@@ -141,7 +140,7 @@
                                             for (i = 0; i < len; i++) {
                                                 var docTitle = rowsArray[i].DocTitle;
                                                 var creationDate = rowsArray[i].CreationDate;
-
+                                                alert("docTitle: " + docTitle + ", creationDate: " + creationDate);
                                                 window.resolveLocalFileSystemURI(rowsArray[i].DocName, function (fileEntry) {
                                                     fileEntry.file(function (file) {
                                                         var reader = new FileReader();
