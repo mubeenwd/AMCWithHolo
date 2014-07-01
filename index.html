@@ -133,8 +133,13 @@
             }
 
             function onNextClick() {
-                var dateSelected = $("#ddlDay").val() + "/" + $("#ddlMonth").val() + "/" + $("#ddlYear").val();
-                location = "addDoc.html?DealersName=" + $("#txtDealersName").val() + "&BillingAmt=" + $("#txtBillingAmt").val() + "&BillingDate=" + dateSelected;
+                if (($("#ddlDay").val() > 0) && ($("#ddlMonth").val() > 0) && ($("#ddlYear").val() > 0)) {
+                    var dateSelected = $("#ddlDay").val() + "/" + $("#ddlMonth").val() + "/" + $("#ddlYear").val();
+                    location = "addDoc.html?DealersName=" + $("#txtDealersName").val() + "&BillingAmt=" + $("#txtBillingAmt").val() + "&BillingDate=" + dateSelected;
+                }
+                else {
+                    alert('Please select date');
+                }
             }
         </script>
 </body>
