@@ -103,6 +103,7 @@
                 var innerData = [];
 
                 $("#docList a").each(function () {
+                    
                     var RecordId = 0;
 
                     var dataEnteryId = $(this).attr("data-entery-id");
@@ -124,7 +125,7 @@
                             if (msg != null) {
                                 data = $.parseJSON(msg.d);
                                 if (data.Result > 0) {
-                                    RecordId = data.Result;
+                                    RecordId = data[0].Result;
                                 }
                                 else {
                                     alert(data.Error);
