@@ -124,7 +124,7 @@
                             alert(JSON.stringify(msg));
                             if (msg != null) {
                                 data = $.parseJSON(msg.d);
-                                if (data.Result > 0) {
+                                if (data[0].Result > 0) {
                                     RecordId = data[0].Result;
                                 }
                                 else {
