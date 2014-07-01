@@ -85,7 +85,7 @@
                     "CREATE TABLE IF NOT EXISTS DealersDocs (DocId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryId , DocTitle, DocName, CreationDate);"
                    ],
                    function () {
-                       location = "main.html";
+                       $("#errorWell").html('<p style="color:green;">Application is ready..<p>');
                    },
                    function () {
                        $("#errorWell").html('<p style="color:red;">PopulateDatabase: db creation error<p>');
