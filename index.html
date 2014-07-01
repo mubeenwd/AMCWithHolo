@@ -85,25 +85,40 @@
 
                 for (var i = 1; i <= 31; i++) {
                     if (i < 10) {
-                        $("#ddlDay").append("<option value=\"0" + i + "\">0" + i + "</option>");
+                        if (i == 1) {
+                            $("#ddlDay").append("<option value=\"0" + i + "\" selected=\"selected\">0" + i + "</option>");
+                        }
+                        else {
+                            $("#ddlDay").append("<option value=\"0" + i + "\">0" + i + "</option>");
+                        }
                     }
                     else {
-                        $("#ddlDay").append("<option value=\"0" + i + "\">0" + i + "</option>");
+                        $("#ddlDay").append("<option value=\"0" + i + "\">" + i + "</option>");
                     }
                 }
 
                 for (var i = 1; i <= 12; i++) {
                     if (i < 10) {
-                        $("#ddlMonth").append("<option value=\"0" + i + "\">0" + i + "</option>");
+                        if (i == 1) {
+                            $("#ddlMonth").append("<option value=\"0" + i + "\" selected=\"selected\">0" + i + "</option>");
+                        }
+                        else {
+                            $("#ddlMonth").append("<option value=\"0" + i + "\">0" + i + "</option>");
+                        }
                     }
                     else {
-                        $("#ddlMonth").append("<option value=\"0" + i + "\">0" + i + "</option>");
+                        $("#ddlMonth").append("<option value=\"0" + i + "\">" + i + "</option>");
                     }
                 }
 
                 for (var i = 1; i <= 10; i++) {
                     var j = (i + 2010);
-                    $("#ddlYear").append("<option value=\"" + j + "\">" + j + "</option>");
+                    if (i == 1) {
+                        $("#ddlYear").append("<option value=\"" + j + "\" selected=\"selected\">" + j + "</option>");
+                    }
+                    else {
+                        $("#ddlYear").append("<option value=\"" + j + "\">" + j + "</option>");
+                    }
                 }
             });
 
