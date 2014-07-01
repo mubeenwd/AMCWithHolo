@@ -147,7 +147,7 @@
                                                         var reader = new FileReader();
                                                         reader.onloadend = function (evt) {
                                                             var imageData = Base64.encode(evt.target.result);
-
+                                                            alert("imageData.length: " + imageData.length);
                                                             $.ajax({
                                                                 crossDomain: true,
                                                                 async: false,
