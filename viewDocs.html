@@ -139,42 +139,29 @@
 
                                         if (len > 0) {
                                             for (i = 0; i < len; i++) {
+                                                var docTitle = rowsArray[i].DocTitle.replcae(" ", "-");
+                                                var imageName = dataEnteryName.replace(" ", "-") + "-" + docTitle + ".jpg";
 
-                                                window.resolveLocalFileSystemURI(rowsArray[i].DocName,
-                                                function (fileEntry) {
-                                                    alert("got image file entry: " + fileEntry.fullPath);
-                                                    fileEntry.file(function (file) {
-                                                        var reader = new FileReader();
-                                                        reader.onloadend = function (evt) {
-                                                            var imageData = Base64.encode(evt.target.result);
-                                                            alert("imageData.length: " + imageData.length);
-                                                            $.ajax({
-                                                                crossDomain: true,
-                                                                async: false,
-                                                                type: "POST",
-                                                                url: "http://docs.mubeen.in/Services/DocuSave.asmx/SaveImageDocument",
-                                                                data: JSON.stringify({ DocTitle: rowsArray[i].DocTitle, DocName: rowsArray[i].DocName, CreationDate: rowsArray[i].CreationDate, RecordId: RecordId, dataEnteryName: dataEnteryName, dataEnteryDate: dataEnteryDate, ImageData: imageData }),
-                                                                contentType: "application/json; charset=utf-8",
-                                                                dataType: "json",
-                                                                success: function (msg) {
-                                                                    if (msg != null) {
-                                                                        data = $.parseJSON(msg.d);
-                                                                        alert(JSON.stringify(data));
-                                                                    }
-                                                                }
-                                                            });
-                                                        };
-                                                        reader.readAsText(file);
-                                                    },
-                                                    function () {
-                                                        alert("inner fail");
-                                                    });
-                                                },
-                                                function () {
-                                                    alert("outer fail");
-                                                });
+                                                var options = new FileUploadOptions();
+                                                options.fileKey = "recFile";
+                                                options.fileName = imageName;
+                                                options.mimeType = "image/jpeg";
 
+                                                var params = new Object();
+                                                params.dataEnteryDate = dataEnteryDate;
+                                                params.dataEnteryName = dataEnteryName;
+                                                params.recordId = RecordId;
+                                                params.docTitle = docTitle;
+                                                options.params = params;
+                                                
+                                                alert(imageName + ", " + JSON.stringify(params));
 
+                                                var ft = new FileTransfer();
+                                                ft.upload(imageURI, "http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage", function (r) {
+                                                    alert("uploadfile Sent = " + r.bytesSent);
+                                                }, function (error) {
+                                                    alert("uploadfile An error has occurred: Code = " + error.code);
+                                                }, options);
                                             }
                                         }
                                         else {
