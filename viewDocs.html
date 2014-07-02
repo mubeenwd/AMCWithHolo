@@ -158,12 +158,18 @@
                                                 options.params = params;
 
                                                 try {
-                                                    var ft = new FileTransfer();
-                                                    ft.upload(imageURI, "http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage", function (r) {
-                                                        alert("uploadfile Sent = " + r.bytesSent);
-                                                    }, function (error) {
-                                                        alert("uploadfile An error has occurred: Code = " + error.code);
-                                                    }, options);
+                                                    window.resolveLocalFileSystemURI(rowsArray[i].DocName, function (fileEntry) {
+                                                        fileEntry.file(function (fileObj) {
+                                                            var fileName = fileObj.fullPath;
+                                                            alert("fileName: " + fileName);
+                                                            var ft = new FileTransfer();
+                                                            ft.upload(fileName, "http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage", function (r) {
+                                                                alert("uploadfile Sent = " + r.bytesSent);
+                                                            }, function (error) {
+                                                                alert("uploadfile An error has occurred: Code = " + error.code);
+                                                            }, options);
+                                                        });
+                                                    });
 
                                                 } catch (e) {
                                                     alert(e);
