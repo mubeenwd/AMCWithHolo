@@ -137,13 +137,12 @@
                                     function (transaction, results, rowsArray) {
 
                                         var len = rowsArray.length;
-                                        alert(len);
+
                                         if (len > 0) {
                                             for (i = 0; i < len; i++) {
-                                                alert(i + ", " + len);
+
                                                 var docTitle = rowsArray[i].DocTitle;
                                                 var imageName = dataEnteryName + " " + docTitle;
-                                                alert(docTitle + ", " + imageName);
 
                                                 var options = new FileUploadOptions();
                                                 options.fileKey = "recFile";
@@ -157,14 +156,17 @@
                                                 params.docTitle = docTitle;
                                                 options.params = params;
 
-                                                alert(imageName + ", " + JSON.stringify(params));
+                                                try {
+                                                    var ft = new FileTransfer();
+                                                    ft.upload(imageURI, "http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage", function (r) {
+                                                        alert("uploadfile Sent = " + r.bytesSent);
+                                                    }, function (error) {
+                                                        alert("uploadfile An error has occurred: Code = " + error.code);
+                                                    }, options);
 
-                                                var ft = new FileTransfer();
-                                                ft.upload(imageURI, "http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage", function (r) {
-                                                    alert("uploadfile Sent = " + r.bytesSent);
-                                                }, function (error) {
-                                                    alert("uploadfile An error has occurred: Code = " + error.code);
-                                                }, options);
+                                                } catch (e) {
+                                                    alert(e);
+                                                }
                                             }
                                         }
                                         else {
