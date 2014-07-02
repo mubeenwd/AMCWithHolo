@@ -161,7 +161,7 @@
                                                     window.resolveLocalFileSystemURI(rowsArray[i].DocName, function (fileEntry) {
                                                         fileEntry.file(function (fileObj) {
                                                             var fileName = fileObj.fullPath;
-                                                            alert("fileName: " + fileName);
+                                                            alert("fileName: " + fileName.toURL());
                                                             var ft = new FileTransfer();
                                                             ft.upload(fileName.toURL(), "http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage", function (r) {
                                                                 alert("uploadfile Sent = " + r.bytesSent);
