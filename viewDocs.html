@@ -161,13 +161,21 @@
                                                     window.resolveLocalFileSystemURI(rowsArray[i].DocName, function (fileEntry) {
                                                         fileEntry.file(function (fileObj) {
                                                             var fileName = fileObj.fullPath;
-                                                            alert("fileName: " + fileName.toURL());
+                                                            alert("fileName: " + fileName);
                                                             var ft = new FileTransfer();
-                                                            ft.upload(fileName.toURL(), encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
+                                                            ft.upload(fileName, encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
                                                                 alert("uploadfile Sent = " + r.bytesSent);
                                                             }, function (error) {
-                                                                alert("uploadfile An error has occurred: Code = " + error.code);
-                                                            }, options, true);
+                                                                if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
+                                                                    alert("file " + error.source + " not found");
+                                                                } else if (error.code == FileTransferError.INVALID_URL_ERR) {
+                                                                    alert("url " + error.target + " invalid");
+                                                                } else if (error.code == FileTransferError.CONNECTION_ERR) {
+                                                                    alert("connection error");
+                                                                } else {
+                                                                    alert("unknown error");
+                                                                }
+                                                            }, options);
                                                         });
                                                     });
 
