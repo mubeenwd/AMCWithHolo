@@ -143,6 +143,7 @@
                                                 var docTitle = rowsArray[i].DocTitle.replcae(" ", "-");
                                                 var imageName = dataEnteryName.replace(" ", "-") + "-" + docTitle + ".jpg";
                                                 alert(docTitle + ", " + imageName);
+
                                                 var options = new FileUploadOptions();
                                                 options.fileKey = "recFile";
                                                 options.fileName = imageName;
