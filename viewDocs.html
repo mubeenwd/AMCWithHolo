@@ -163,11 +163,11 @@
                                                             var fileName = fileObj.fullPath;
                                                             alert("fileName: " + fileName.toURL());
                                                             var ft = new FileTransfer();
-                                                            ft.upload(fileName.toURL(), "http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage", function (r) {
+                                                            ft.upload(fileName.toURL(), encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
                                                                 alert("uploadfile Sent = " + r.bytesSent);
                                                             }, function (error) {
                                                                 alert("uploadfile An error has occurred: Code = " + error.code);
-                                                            }, options,true);
+                                                            }, options, true);
                                                         });
                                                     });
 
