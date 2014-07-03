@@ -45,7 +45,7 @@
                             <div class="panel-heading">
                                 <h4>
                                     View Documents</h4>
-                                      <button class="btn btn-info btn-sm pull-right" type="button" onclick="syncDocuments();">
+                                      <button class="btn btn-info btn-sm pull-right" type="button" onclick="chkData();">
                                     <i class="glyphicon glyphicon-file"></i>&nbsp;Upload All Docs</button>
                                     
                                      <br /><br />
@@ -72,7 +72,8 @@
         <script type="text/javascript">
             $.support.cors = true;
             $.ajaxSetup({ crossDomain: true });
-
+            var serverData = [];
+            var origData = [];
             $(function () {
                 try {
                     html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
@@ -85,6 +86,25 @@
                         if (len > 0) {
                             for (i = 0; i < len; i++) {
                                 $("#docList").append('<a  data-billing-amt="' + rowsArray[i].BillingAmt + '" data-billing-date="' + rowsArray[i].BillingDate + '" data-entery-id="' + rowsArray[i].EnteryId + '" data-entery-name="' + rowsArray[i].EnteryName + '" data-entery-date="' + rowsArray[i].CreationDate + '" href="docDetails.html?enteryId=' + rowsArray[i].EnteryId + '&enteryName=' + rowsArray[i].EnteryName + '&billingDate=' + rowsArray[i].BillingDate + '&billingAmt=' + rowsArray[i].BillingAmt + '" class="list-group-item">&nbsp;' + rowsArray[i].EnteryName + ' - Rs.' + rowsArray[i].BillingAmt + '</a>');
+
+                                html5sql.process(
+                                [
+                                "SELECT * FROM DealersDocs WHERE EnteryId=" + rowsArray[i].EnteryId + ";",
+                                ],
+                                function (transactionInner, resultsInner, rowsArrayInner) {
+                                    var lenInner = rowsArrayInner.length, j;
+
+                                    if (lenInner > 0) {
+                                        for (j = 0; j < lenInner; j++) {
+                                            origData.push({ enteryId: rowsArrayInner[j].EnteryId, docTitle: rowsArrayInner[j].DocTitle, docName: rowsArrayInner[j].DocName, docId: rowsArrayInner[j].DocId });
+                                        }
+                                    }
+                                },
+                                function () {
+                                });
+
+                                serverData.push({ dataEnteryId: rowsArray[i].EnteryId, dataEnteryName: rowsArray[i].EnteryName, dataEnteryDate: rowsArray[i].CreationDate, dataBillingDate: rowsArray[i].BillingDate, dataBillingAmt: rowsArray[i].BillingAmt });
+
                             }
                         }
                         else {
@@ -99,111 +119,86 @@
                 }
             });
 
-            function syncDocuments() {
-                var innerData = [];
+            function chkData() {
 
-                $("#docList a").each(function () {
+                var orgLength = origData.length;
 
-                    var RecordId = 0;
-
-                    var dataEnteryId = $(this).attr("data-entery-id");
-                    var dataEnteryName = $(this).attr("data-entery-name");
-                    var dataEnteryDate = $(this).attr("data-entery-date");
-                    var dataBillingDate = $(this).attr("data-billing-date");
-                    var dataBillingAmt = $(this).attr("data-billing-amt");
-
+                $.each(serverData, function (index, data) {
+                    alert(JSON.stringify({ dataEnteryName: data.dataEnteryName, dataEnteryDate: data.dataEnteryDate, dataBillingDate: data.dataBillingDate, dataBillingAmt: data.dataBillingAmt }));
                     $.ajax({
                         crossDomain: true,
                         async: false,
                         type: "POST",
                         url: "http://docs.mubeen.in/Services/DocuSave.asmx/SaveDocument",
-                        data: JSON.stringify({ dataEnteryName: dataEnteryName, dataEnteryDate: dataEnteryDate, dataBillingDate: dataBillingDate, dataBillingAmt: dataBillingAmt }),
+                        data: JSON.stringify({ dataEnteryName: data.dataEnteryName, dataEnteryDate: data.dataEnteryDate, dataBillingDate: data.dataBillingDate, dataBillingAmt: data.dataBillingAmt }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {
                             if (msg != null) {
-                                data = $.parseJSON(msg.d);
+                                obj = $.parseJSON(msg.d);
+                                if (obj[0].Result > 0) {
+                                    RecordId = obj[0].Result;
+                                    var innerData = $.grep(origData, function (n) { return n.enteryId === data.dataEnteryId; });
+                                    alert(JSON.stringify(innerData));
+                                    $.each(innerData, function (innerIndex, innerValue) {
 
-                                if (data[0].Result > 0) {
+                                        var docTitle = innerValue.docTitle;
+                                        var docName = innerValue.docName;
 
-                                    RecordId = data[0].Result;
+                                        var imageName = data.dataEnteryName.replace(" ", "-") + "-" + docTitle.replace(" ", "-");
 
-                                    html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+                                        var options = new FileUploadOptions();
+                                        options.fileKey = "recFile";
+                                        options.fileName = imageName;
+                                        options.mimeType = "image/jpeg";
+                                        options.chunkedMode = false;
+                                        var params = new Object();
+                                        params.dataEnteryDate = data.dataEnteryDate;
+                                        params.dataEnteryName = data.dataEnteryName;
+                                        params.recordId = RecordId;
+                                        params.docTitle = docTitle;
 
-                                    html5sql.process(
-                                    [
-                                    "SELECT * FROM DealersDocs WHERE EnteryId=" + dataEnteryId,
-                                    ],
-                                    function (transaction, results, rowsArray) {
+                                        options.params = params;
 
-                                        var len = rowsArray.length;
+                                        window.resolveLocalFileSystemURI(docName, function (fileEntry) {
+                                            fileEntry.file(function (fileObj) {
+                                                var fileName = fileObj.fullPath;
 
-                                        if (len > 0) {
-                                            for (i = 0; i < len; i++) {
+                                                alert("fileName: " + fileName);
+                                                var ft = new FileTransfer();
+                                                ft.upload(fileName, encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
+                                                    alert("uploadfile Sent = " + r.bytesSent + "orgLength: " + orgLength);
 
-                                                var docTitle = rowsArray[i].DocTitle;
-                                                var imageName = dataEnteryName + " " + docTitle;
-
-                                                var options = new FileUploadOptions();
-                                                options.fileKey = "recFile";
-                                                options.fileName = imageName;
-                                                options.mimeType = "image/jpeg";
-                                                options.chunkedMode = false;
-                                                var params = new Object();
-                                                params.dataEnteryDate = dataEnteryDate;
-                                                params.dataEnteryName = dataEnteryName;
-                                                params.recordId = RecordId;
-                                                params.docTitle = docTitle;
-
-                                                options.params = params;
-
-                                                try {
-                                                    window.resolveLocalFileSystemURI(rowsArray[i].DocName, function (fileEntry) {
-                                                        fileEntry.file(function (fileObj) {
-                                                            var fileName = fileObj.fullPath;
-                                                            alert("fileName: " + fileName);
-                                                            var ft = new FileTransfer();
-                                                            ft.upload(fileName, encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
-                                                                alert("uploadfile Sent = " + r.bytesSent);
-                                                            }, function (error) {
-                                                                if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
-                                                                    alert("file " + error.source + " not found");
-                                                                } else if (error.code == FileTransferError.INVALID_URL_ERR) {
-                                                                    alert("url " + error.target + " invalid");
-                                                                } else if (error.code == FileTransferError.CONNECTION_ERR) {
-                                                                    alert("connection error");
-                                                                } else {
-                                                                    alert("unknown error");
-                                                                }
-                                                            }, options);
-                                                        });
-                                                    });
-
-                                                } catch (e) {
-                                                    alert(e);
-                                                }
-                                            }
-                                        }
-                                        else {
-                                            alert("pgDocumentList: No Record Found");
-                                        }
-                                    },
-                                    function () {
-                                        alert("pgDocumentList: Transaction error");
+                                                    if (orgLength == 0) {
+                                                        deleteAll();
+                                                    }
+                                                    else {
+                                                        orgLength = (orgLength - 1);
+                                                    }
+                                                }, function (error) {
+                                                    if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
+                                                        alert("file " + error.source + " not found");
+                                                    } else if (error.code == FileTransferError.INVALID_URL_ERR) {
+                                                        alert("url " + error.target + " invalid");
+                                                    } else if (error.code == FileTransferError.CONNECTION_ERR) {
+                                                        alert("connection error");
+                                                    } else {
+                                                        alert("unknown error");
+                                                    }
+                                                }, options);
+                                            });
+                                        });
                                     });
                                 }
-                                else {
-                                    alert(data.Error);
-                                }
                             }
-                        },
-                        error: function (a, b, c) {
-                            alert(a + ", " + b + ", " + c);
                         }
                     });
                 });
             }
-            
+
+            function deleteAll() {
+                alert("deleteAll");
+            }
         </script>
 </body>
 </html>
