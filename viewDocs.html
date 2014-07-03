@@ -176,13 +176,13 @@
                                                     }
                                                 }, function (error) {
                                                     if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
-                                                        $("#dvMessage").append("<b style\"color:green;\">File " + error.source + " not found");
+                                                        $("#dvMessage").append("<b style\"color:green;\">File " + error.source + " not found </b></br>");
                                                     } else if (error.code == FileTransferError.INVALID_URL_ERR) {
-                                                        $("#dvMessage").append("<b style\"color:green;\">url " + error.target + " invalid for " + data.dataEnteryName + "'s " + docTitle);
+                                                        $("#dvMessage").append("<b style\"color:green;\">url " + error.target + " invalid for " + data.dataEnteryName + "'s " + docTitle + "</b></br>");
                                                     } else if (error.code == FileTransferError.CONNECTION_ERR) {
-                                                        $("#dvMessage").append("<b style\"color:green;\">connection error for " + data.dataEnteryName + "'s " + docTitle);
+                                                        $("#dvMessage").append("<b style\"color:green;\">connection error for " + data.dataEnteryName + "'s " + docTitle + "</b></br>");
                                                     } else {
-                                                        $("#dvMessage").append("<b style\"color:green;\">unknown error uploading " + data.dataEnteryName + "'s " + docTitle);
+                                                        $("#dvMessage").append("<b style\"color:green;\">unknown error uploading " + data.dataEnteryName + "'s " + docTitle + "</b></br>");
                                                     }
                                                 }, options);
                                             });
@@ -205,6 +205,7 @@
                     "DROP TABLE DealersDocs",
                     ],
                     function () {
+                        navigator.camera.cleanup(function () { $("#dvMessage").append("<b style\"color:green;\">App cache cleaned</b></br>"); }, function () { });
                         location = "index.html";
                     },
                     function () {
