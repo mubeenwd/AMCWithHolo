@@ -144,12 +144,7 @@
 
                                         var docTitle = innerValue.docTitle;
                                         var docName = innerValue.docName;
-
-                                        alert(docName + ",", docTitle);
-
                                         var imageName = data.dataEnteryName + " " + docTitle;
-
-                                        alert(imageName);
 
                                         var options = new FileUploadOptions();
                                         options.fileKey = "recFile";
@@ -164,18 +159,12 @@
 
                                         options.params = params;
 
-                                        alert(JSON.stringify(options));
-
                                         window.resolveLocalFileSystemURI(docName, function (fileEntry) {
                                             fileEntry.file(function (fileObj) {
                                                 var fileName = fileObj.fullPath;
-                                                alert(fileName);
+                                                
                                                 var ft = new FileTransfer();
                                                 ft.upload(fileName, encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
-
-                                                    alert(data.dataEnteryName + "'s " + docTitle + " has been uploaded(" + orgLength + " is pending)");
-
-                                                    $("#dvMessage").append("<b style\"color:green;\">" + data.dataEnteryName + "'s " + docTitle + " has been uploaded(" + orgLength + " is pending).</b><br/>");
 
                                                     orgLength = (orgLength - 1);
 
@@ -184,26 +173,25 @@
                                                     }
                                                 }, function (error) {
                                                     if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
-                                                        $("#dvMessage").append("<b style\"color:red;\">File " + error.source + " not found </b></br>");
+                                                        alert("File " + error.source + " not found");
                                                     } else if (error.code == FileTransferError.INVALID_URL_ERR) {
-                                                        $("#dvMessage").append("<b style\"color:red;\">url " + error.target + " invalid for " + data.dataEnteryName + "s " + docTitle + "</b></br>");
+                                                        alert("url " + error.target + " invalid");
                                                     } else if (error.code == FileTransferError.CONNECTION_ERR) {
-                                                        $("#dvMessage").append("<b style\"color:red;\">connection error for " + data.dataEnteryName + "s " + docTitle + "</b></br>");
+                                                        alert("connection error");
                                                     } else {
-                                                        $("#dvMessage").append("<b style\"color:red;\">unknown error uploading " + data.dataEnteryName + "s " + docTitle + "</b></br>");
+                                                        alert("unknown error uploading");
                                                     }
-                                                    alert("Error occured code: " + error.code);
                                                 }, options);
                                             });
                                         });
                                     });
                                 }
                                 else {
-                                    $("#dvMessage").append("<b style\"color:red;\">Server error: " + obj.Message + "</b></br>"); ;
+                                    alert("server error : " + obj.Message);
                                 }
                             }
                             else {
-                                $("#dvMessage").append("<b style\"color:red;\">Couldent upload data</b></br>");
+                                alert("unknown error while uploading data");
                             }
                         }
                     });
