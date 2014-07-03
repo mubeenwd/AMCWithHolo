@@ -11,7 +11,7 @@
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
     <link href="css/styles.css" rel="stylesheet">
-    <script src="phonegap.js" type="text/javascript"></script>
+    <script src="js/crodova.js" type="text/javascript"></script>
 </head>
 <body>
     <div class="page-container">
@@ -120,9 +120,6 @@
             });
 
             function chkData() {
-
-                var orgLength = origData.length;
-
                 $.each(serverData, function (index, data) {
                     alert(JSON.stringify({ dataEnteryName: data.dataEnteryName, dataEnteryDate: data.dataEnteryDate, dataBillingDate: data.dataBillingDate, dataBillingAmt: data.dataBillingAmt }));
                     $.ajax({
@@ -141,64 +138,57 @@
                                     var innerData = $.grep(origData, function (n) { return n.enteryId === data.dataEnteryId; });
                                     alert(JSON.stringify(innerData));
                                     $.each(innerData, function (innerIndex, innerValue) {
+                                        try {
+                                            var docTitle = innerValue.docTitle;
+                                            var docName = innerValue.docName;
 
-                                        var docTitle = innerValue.docTitle;
-                                        var docName = innerValue.docName;
+                                            var imageName = data.dataEnteryName + " " + docTitle;
 
-                                        var imageName = data.dataEnteryName.replace(" ", "-") + "-" + docTitle.replace(" ", "-");
+                                            var options = new FileUploadOptions();
+                                            options.fileKey = "recFile";
+                                            options.fileName = imageName;
+                                            options.mimeType = "image/jpeg";
+                                            options.chunkedMode = false;
+                                            var params = new Object();
+                                            params.dataEnteryDate = data.dataEnteryDate;
+                                            params.dataEnteryName = data.dataEnteryName;
+                                            params.recordId = RecordId;
+                                            params.docTitle = docTitle;
 
-                                        var options = new FileUploadOptions();
-                                        options.fileKey = "recFile";
-                                        options.fileName = imageName;
-                                        options.mimeType = "image/jpeg";
-                                        options.chunkedMode = false;
-                                        var params = new Object();
-                                        params.dataEnteryDate = data.dataEnteryDate;
-                                        params.dataEnteryName = data.dataEnteryName;
-                                        params.recordId = RecordId;
-                                        params.docTitle = docTitle;
+                                            options.params = params;
 
-                                        options.params = params;
+                                            window.resolveLocalFileSystemURI(docName, function (fileEntry) {
+                                                fileEntry.file(function (fileObj) {
+                                                    var fileName = fileObj.fullPath;
 
-                                        window.resolveLocalFileSystemURI(docName, function (fileEntry) {
-                                            fileEntry.file(function (fileObj) {
-                                                var fileName = fileObj.fullPath;
+                                                    alert("fileName: " + fileName);
+                                                    var ft = new FileTransfer();
+                                                    ft.upload(fileName, encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
+                                                        alert("uploadfile Sent = " + r.bytesSent);
 
-                                                alert("fileName: " + fileName);
-                                                var ft = new FileTransfer();
-                                                ft.upload(fileName, encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
-                                                    alert("uploadfile Sent = " + r.bytesSent + "orgLength: " + orgLength);
-
-                                                    if (orgLength == 0) {
-                                                        deleteAll();
-                                                    }
-                                                    else {
-                                                        orgLength = (orgLength - 1);
-                                                    }
-                                                }, function (error) {
-                                                    if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
-                                                        alert("file " + error.source + " not found");
-                                                    } else if (error.code == FileTransferError.INVALID_URL_ERR) {
-                                                        alert("url " + error.target + " invalid");
-                                                    } else if (error.code == FileTransferError.CONNECTION_ERR) {
-                                                        alert("connection error");
-                                                    } else {
-                                                        alert("unknown error");
-                                                    }
-                                                }, options);
+                                                    }, function (error) {
+                                                        if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
+                                                            alert("file " + error.source + " not found");
+                                                        } else if (error.code == FileTransferError.INVALID_URL_ERR) {
+                                                            alert("url " + error.target + " invalid");
+                                                        } else if (error.code == FileTransferError.CONNECTION_ERR) {
+                                                            alert("connection error");
+                                                        } else {
+                                                            alert("unknown error");
+                                                        }
+                                                    }, options);
+                                                });
                                             });
-                                        });
+                                        } catch (e) {
+                                            alert(e);
+                                        }
                                     });
                                 }
                             }
                         }
                     });
                 });
-            }
-
-            function deleteAll() {
-                alert("deleteAll");
-            }
+            }     
         </script>
 </body>
 </html>
