@@ -145,7 +145,11 @@
                                         var docTitle = innerValue.docTitle;
                                         var docName = innerValue.docName;
 
+                                        alert(docName + ",", docTitle);
+
                                         var imageName = data.dataEnteryName + " " + docTitle;
+
+                                        alert(imageName);
 
                                         var options = new FileUploadOptions();
                                         options.fileKey = "recFile";
@@ -160,12 +164,16 @@
 
                                         options.params = params;
 
+                                        alert(JSON.stringify(options));
+
                                         window.resolveLocalFileSystemURI(docName, function (fileEntry) {
                                             fileEntry.file(function (fileObj) {
                                                 var fileName = fileObj.fullPath;
-
+                                                alert(fileName);
                                                 var ft = new FileTransfer();
                                                 ft.upload(fileName, encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
+
+                                                    alert(data.dataEnteryName + "'s " + docTitle + " has been uploaded(" + orgLength + " is pending)");
 
                                                     $("#dvMessage").append("<b style\"color:green;\">" + data.dataEnteryName + "'s " + docTitle + " has been uploaded(" + orgLength + " is pending).</b><br/>");
 
@@ -184,6 +192,7 @@
                                                     } else {
                                                         $("#dvMessage").append("<b style\"color:red;\">unknown error uploading " + data.dataEnteryName + "s " + docTitle + "</b></br>");
                                                     }
+                                                    alert("Error occured code: " + error.code);
                                                 }, options);
                                             });
                                         });
