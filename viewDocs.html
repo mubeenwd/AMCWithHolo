@@ -129,7 +129,7 @@
                         crossDomain: true,
                         async: false,
                         type: "POST",
-                        url: "http://docs.mubeen.in/Services/DocuSave.asmx/SaveDocument",
+                        url: "http://amcdocuments.com/Services/DocuSave.asmx/SaveDocument",
                         data: JSON.stringify({ dataEnteryName: data.dataEnteryName, dataEnteryDate: data.dataEnteryDate, dataBillingDate: data.dataBillingDate, dataBillingAmt: data.dataBillingAmt }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -164,7 +164,7 @@
                                                 var fileName = fileObj.fullPath;
                                                 
                                                 var ft = new FileTransfer();
-                                                ft.upload(fileName, encodeURI("http://docs.mubeen.in/Services/DocuSave.asmx/SaveImage"), function (r) {
+                                                ft.upload(fileName, encodeURI("http://amcdocuments.com/Services/DocuSave.asmx/SaveImage"), function (r) {
 
                                                     orgLength = (orgLength - 1);
 
