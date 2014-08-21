@@ -8,11 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="spinner/waitMe.min.css" rel="stylesheet">
     <!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
     <link href="css/styles.css" rel="stylesheet">
-    <script src="phonegap.js" type="text/javascript"></script>
+    
 </head>
 <body>
     <div class="page-container">
@@ -67,7 +68,9 @@
                 </div>
             </div>
         </div>
+        <script src="phonegap.js" type="text/javascript"></script>
         <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="spinner/waitMe.min.js"></script>
         <script type="text/javascript" src="js/html5sql.js"></script>
         <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
@@ -76,6 +79,13 @@
             document.addEventListener("deviceready", onDeviceReady, false);
 
             function onDeviceReady() {
+                $(".page-container").waitMe({
+                    effect: 'ios',
+                    text: 'Please wait',
+                    bg: 'rgba(255,255,255,0.7)',
+                    color: '#000'
+                });
+
                 try {
                     html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
 
@@ -86,12 +96,15 @@
                    ],
                    function () {
                        $("#errorWell").html('<p style="color:green;">Application is ready..<p>');
+                       $('.page-container').waitMe('hide');
                    },
                    function () {
                        $("#errorWell").html('<p style="color:red;">PopulateDatabase: db creation error<p>');
+                       $('.page-container').waitMe('hide');
                    });
                 } catch (e) {
                     $("#errorWell").html('<p style="color:red;">PopulateDatabase;Error: ' + e);
+                    $('.page-container').waitMe('hide');
                 }
             }
 
