@@ -11,8 +11,7 @@
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
     <link href="css/styles.css" rel="stylesheet">
-    <link href="spinner/waitMe.min.css" rel="stylesheet">
-    
+    <script src="phonegap.js" type="text/javascript"></script>
 </head>
 <body>
     <div class="page-container">
@@ -62,24 +61,13 @@
                 </div>
             </div>
         </div>
-        <script src="phonegap.js" type="text/javascript"></script>
         <script type="text/javascript" src="js/jquery.min.js"></script>
-        <script type="text/javascript" src="spinner/waitMe.min.js"></script>
         <script type="text/javascript" src="js/html5sql.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
-
         <script type="text/javascript">
 
             $(function () {
-
-                $(".page-container").waitMe({
-                    effect: 'ios',
-                    text: 'Please wait',
-                    bg: 'rgba(255,255,255,0.7)',
-                    color: '#000'
-                });
-
                 var currentDate = getCurrentDateAndTime();
 
                 _dealersName = getParameterByName("DealersName");
@@ -97,11 +85,9 @@
                    function (transaction, results, rowsArray) {
                        $("#errorWell").html('<p style="color:green;">' + _dealersName + ' has been saved successfully start capturing docs!!');
                        $("#lastInsertedId").val(results.insertId);
-                       $('.page-container').waitMe('hide');
                    },
                     function () {
                         $("#errorWell").html('<p style="color:red;">Error occured while saving ' + _dealersName + '. Please go back and start from the scratch!!' + '<br/>' + strCommand);
-                        $('.page-container').waitMe('hide');
                     });
             });
 
@@ -123,13 +109,6 @@
 
 
             function saveDocuments() {
-                $(".page-container").waitMe({
-                    effect: 'ios',
-                    text: 'Please wait',
-                    bg: 'rgba(255,255,255,0.7)',
-                    color: '#000'
-                });
-
                 try {
                     var dealerId = $("#lastInsertedId").val();
 
@@ -148,17 +127,14 @@
                         html5sql.process(
                            insertScript,
                            function (transactionInner, resultsInner, rowsArrayInner) {
-                               $('.page-container').waitMe('hide');
                                location = "viewDocs.html";
                            },
                            function () {
                                $("#errorWell").html('<p style="color:red;">Error occured while saving Document No. ' + resultsInner.insertId + ' !!');
-                               $('.page-container').waitMe('hide');
                            });
                     }
                 } catch (e) {
-                       $("#errorWell").html('<p style="color:red;">addDealersEntery;Error: ' + e);
-                       $('.page-container').waitMe('hide');
+                    $("#errorWell").html('<p style="color:red;">addDealersEntery;Error: ' + e);
                 }
             }
 
