@@ -139,6 +139,9 @@
                                 obj = $.parseJSON(msg.d);
                                 if (obj[0].Result > 0) {
                                     RecordId = obj[0].Result;
+
+                                    alert('RecordId: ' + RecordId);
+
                                     var innerData = $.grep(origData, function (n) { return n.enteryId === data.dataEnteryId; });
 
                                     $.each(innerData, function (innerIndex, innerValue) {
@@ -146,7 +149,7 @@
                                         var docTitle = innerValue.docTitle;
                                         var docName = innerValue.docName;
                                         var imageName = data.dataEnteryName + " " + docTitle;
-
+                                        
                                         var options = new FileUploadOptions();
                                         options.fileKey = "recFile";
                                         options.fileName = imageName;
@@ -163,7 +166,7 @@
                                         window.resolveLocalFileSystemURI(docName, function (fileEntry) {
                                             fileEntry.file(function (fileObj) {
                                                 var fileName = fileObj.fullPath;
-                                                
+
                                                 var ft = new FileTransfer();
                                                 ft.upload(fileName, encodeURI("http://amcdocuments.com/Services/DocuSave.asmx/SaveImage"), function (r) {
 
