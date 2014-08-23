@@ -202,6 +202,9 @@
                             else {
                                 alert("unknown error while uploading data");
                             }
+                        },
+                        error: function (jqXHR, exception) {
+                            alert(JSON.stringify(exception));
                         }
                     });
                 });
