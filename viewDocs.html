@@ -188,7 +188,7 @@
                                                     } else if (error.code == FileTransferError.CONNECTION_ERR) {
                                                         alert("connection error");
                                                     } else {
-                                                        alert("unknown error uploading");
+                                                        alert("unknown error uploading\r\n" + JSON.stringify(error));
                                                     }
                                                 }, options);
                                             });
