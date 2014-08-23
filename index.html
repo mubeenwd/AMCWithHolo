@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="resc/spinner/waitMe.min.css">
     <script type="text/javascript" src="resc/js/jquery.min.js"></script>
     <script type="text/javascript" src="resc/spinner/waitMe.min.js"></script>
+    <script type="text/javascript" src="resc/js/html5sql.js"></script>
     <script src="phonegap.js" type="text/javascript"></script>
     <script type="text/javascript">
 
@@ -16,20 +17,31 @@
         var destinationType; // sets the format of returned value
         var pageNumber = 1;
 
-        document.addEventListener("deviceready", onDeviceReady, false);
+        var dbName = 'com.amc.documents.database';
+        var dbDescription = 'Amc Documents Database.';
+        var dbSize = (5 * 1024 * 1024);
 
+        document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
 
-            //            $(".ionic-body").waitMe({
-            //                effect: 'ios',
-            //                text: 'Please wait',
-            //                bg: 'rgba(255,255,255,0.7)',
-            //                color: '#000'
-            //            });
-
             pictureSource = navigator.camera.PictureSourceType;
             destinationType = navigator.camera.DestinationType;
+
+            html5sql.openDatabase(dbName, dbDescription, dbSize);
+
+            html5sql.process(
+                 [
+                     "CREATE TABLE IF NOT EXISTS DealersEnteries (EnteryId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryName, CreationDate,BillingDate,BillingAmt);",
+                     "CREATE TABLE IF NOT EXISTS DealersDocs (DocId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryId , DocTitle, DocName, CreationDate);"
+                 ],
+                 function () {
+                     showMessage('Your application is ready!');
+                 },
+                 function (error, statement) {
+                     showMessage("Error: " + error.message + " when processing " + statement);
+                 }
+             );
         }
 
         function onCaptureClick() {
@@ -39,13 +51,13 @@
                 var imageHtml = '<div class="item" id="itemNo' + pageNumber + '">';
                 imageHtml += '<h2>Documents Page - ' + pageNumber + '</h2></div>';
                 imageHtml += '<div class="item item-image">';
-                imageHtml += '<img src="' + imageData + '" alt="document image" style="padding:10px;"/>';
+                imageHtml += '<img src="' + imageData + '" title="Documents Page - ' + pageNumber + '" style="padding:10px;" class="docPicture"/>';
                 imageHtml += '</div>';
                 imageHtml += '<a class="item item-icon-left assertive" href="#" onclick="removeDoc(' + pageNumber + ');"><i class="icon ion-remove"></i>Remove Page - ' + pageNumber + '</a>';
                 $("#imageCards").append(imageHtml);
-
+                $("#btnSaveDocuments").css("display", "block");
+                $("#btnCapture").text("Capture More Images");
                 pageNumber = pageNumber + 1;
-
             },
             function (message) {
                 showMessage('Failed because: ' + message);
@@ -62,6 +74,49 @@
             return false;
         }
 
+        function onSaveDocumentsClick() {
+            try {
+                var insertScript = [];
+                var strCommand = '';
+
+                $(".ionic-body").waitMe({
+                    effect: 'ios',
+                    text: 'Please wait',
+                    bg: 'rgba(255,255,255,0.7)',
+                    color: '#000'
+                });
+
+                html5sql.openDatabase(dbName, dbDescription, dbSize);
+
+                strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("txtBillAmt").val() + "');";
+
+                html5sql.process(
+                [insertScript],
+                function (transaction, results, rowsArray) {
+
+                    $(".docPicture").each(function () {
+                        var docTitle = $(this).attr("title");
+                        var docSrc = $(this).attr("src");
+                        insertScript.push("INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + getCurrentDateAndTime() + "');");
+                    });
+
+                    html5sql.process(
+                    insertScript,
+                    function (transactionInner, resultsInner, rowsArrayInner) {
+                        showMessage('Document has bee saved successfully, click View Document ( menu at bottom ) to view stored documents');
+                    },
+                    function (message) {
+                        showMessage('Failed to save document images because, ' + message);
+                    });
+                },
+                function (message) {
+                    showMessage('Failed to save document because, ' + message);
+                });
+            } catch (e) {
+                showMessage('Failed to store information because, ' + e);
+            }
+        }
+
         function showMessage(error) {
             navigator.notification.alert(
                             error,
@@ -69,6 +124,28 @@
                             'AMC Documents',
                             'Ok'
                         );
+        }
+
+        function getCurrentDateAndTime() {
+            var currentdate = new Date();
+            var datetime = currentdate.getFullYear() + "/"
+                + (currentdate.getMonth() + 1) + "/"
+                + currentdate.getDate() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+
+            return datetime;
+        }
+
+        function getCurrentTime() {
+            var currentdate = new Date();
+            var datetime = " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+
+            return datetime;
         }
     </script>
 </head>
@@ -89,28 +166,35 @@
                     </label>
                     <label class="item item-input icon ion-android-social-user">
                         &nbsp;&nbsp;
-                        <input type="text" id="txtDealer" placeholder="Please enter dealer name">
+                        <input type="text" id="txtDealer" placeholder="Please enter dealer name" style="border: solid 1px #ddd;
+                            margin: 5px; padding: 5px;">
                     </label>
                     <label class="item item-input icon ion-android-calendar">
                         &nbsp;&nbsp;
-                        <input type="date" id="txtBillDate" placeholder="Please select bill date">
+                        <input type="date" id="txtBillDate" placeholder="Please select bill date" style="border: solid 1px #ddd;
+                            margin: 5px; padding: 5px;">
                     </label>
                     <label class="item item-input icon ion-pricetag">
                         &nbsp;&nbsp;
-                        <input type="number" id="txtAmount" placeholder="Please select bill amount">
-                    </label>
-                    <label class="item item-button">
-                        <a id="btnCapture" class="button button-full button-energized icon icon-left ion-ios7-camera"
-                            onclick="onCaptureClick();">Capture Bill Page</a>
+                        <input type="number" id="txtBillAmt" placeholder="Please select bill amount" style="border: solid 1px #ddd;
+                            margin: 5px; padding: 5px;">
                     </label>
                 </div>
             </div>
-            <div class="list card" id="imageCards" style="margin:0;padding:0;">
-
+            <br />
+            <br />
+            <div class="list card" id="imageCards" style="margin: 0; padding: 0;">
             </div>
-            <br />
-            <br />
-            <br />
+            <div>
+                <a id="btnCapture" class="button button-full button-assertive icon icon-left ion-ios7-camera"
+                    onclick="onCaptureClick();">Capture Image</a>
+                <br />
+                <a id="btnSaveDocuments" style="display: none;" class="button button-full button-stable icon icon-left ion-document"
+                    onclick="onSaveDocumentsClick();">Save Document</a>
+                <br />
+                <br />
+                <br />
+            </div>
         </div>
         <div class="tabs tabs-positive tabs-icon-top">
             <a class="tab-item" href="index.html"><i class="icon ion-home" style="font-size: 25px;">
