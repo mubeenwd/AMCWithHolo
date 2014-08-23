@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Document Management Systems</title>
+    <meta name="generator" content="Bootply" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="phonegap.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="page-container">
+        <!-- top navbar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    	<div class="navbar-header">
+           <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".sidebar-nav">
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+           </button>
+           <a class="navbar-brand" href="#">AMC Document Manager</a>
+    	</div>
+    </nav>
+        <div class="container-fluid" style="height: 100%;">
+            <div class="row row-offcanvas row-offcanvas-left">
+                <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+                    <div data-spy="affix" data-offset-top="45" data-offset-bottom="90">
+                        <ul class="nav" id="sidebar-nav">
+                            <li><a href="index.html">AMC Doc Manager</a></li>
+                            <li><a href="viewDocs.html">Document List</a></li>
+                            <li><a href="index.html">Add New Document</a></li>
+                            <li><a href="index.html">Settings</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <br />
+                <div class="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>
+                                    View Documents</h4>
+                                <button class="btn btn-info btn-sm pull-right" type="button" onclick="chkData();">
+                                    <i class="glyphicon glyphicon-file"></i>&nbsp;Upload All Docs</button>
+                                <br />
+                                <br />
+                            </div>
+                            <div class="panel-body">
+                                <div id="dvMessage">
+                                </div>
+                                <div class="list-group" id="docList">
+                                </div>
+                            </div>
+                            <!--/panel-body-->
+                        </div>
+                        <div class="well" id="errorWell">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/html5sql.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/scripts.js"></script>
+        <script type="text/javascript" src="js/json2.js"></script>
+
+        <script type="text/javascript">
+            $.support.cors = true;
+            $.ajaxSetup({ crossDomain: true });
+            var serverData = [];
+            var origData = [];
+            $(function () {
+                try {
+                    html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+                    html5sql.process(
+                    [
+                    "SELECT * FROM DealersEnteries",
+                    ],
+                    function (transaction, results, rowsArray) {
+                        var len = rowsArray.length, i;
+                        if (len > 0) {
+                            for (i = 0; i < len; i++) {
+                                $("#docList").append('<a  data-billing-amt="' + rowsArray[i].BillingAmt + '" data-billing-date="' + rowsArray[i].BillingDate + '" data-entery-id="' + rowsArray[i].EnteryId + '" data-entery-name="' + rowsArray[i].EnteryName + '" data-entery-date="' + rowsArray[i].CreationDate + '" href="docDetails.html?enteryId=' + rowsArray[i].EnteryId + '&enteryName=' + rowsArray[i].EnteryName + '&billingDate=' + rowsArray[i].BillingDate + '&billingAmt=' + rowsArray[i].BillingAmt + '" class="list-group-item">&nbsp;' + rowsArray[i].EnteryName + ' - Rs.' + rowsArray[i].BillingAmt + '</a>');
+
+                                html5sql.process(
+                                [
+                                "SELECT * FROM DealersDocs WHERE EnteryId=" + rowsArray[i].EnteryId + ";",
+                                ],
+                                function (transactionInner, resultsInner, rowsArrayInner) {
+                                    var lenInner = rowsArrayInner.length, j;
+
+                                    if (lenInner > 0) {
+                                        for (j = 0; j < lenInner; j++) {
+                                            origData.push({ enteryId: rowsArrayInner[j].EnteryId, docTitle: rowsArrayInner[j].DocTitle, docName: rowsArrayInner[j].DocName, docId: rowsArrayInner[j].DocId });
+                                        }
+                                    }
+                                },
+                                function () {
+                                });
+
+                                serverData.push({ dataEnteryId: rowsArray[i].EnteryId, dataEnteryName: rowsArray[i].EnteryName, dataEnteryDate: rowsArray[i].CreationDate, dataBillingDate: rowsArray[i].BillingDate, dataBillingAmt: rowsArray[i].BillingAmt });
+
+                            }
+                        }
+                        else {
+                            $("#errorWell").html('<p style="color:red;">pgDocumentList: No Record Found.</p>');
+                        }
+                    },
+                    function () {
+                        $("#errorWell").html('<p style="color:red;">pgDocumentList: db selection error.</p>');
+                    });
+                } catch (e) {
+                    $("#errorWell").html('<p style="color:red;">pgDocumentList: ' + e + '.</p>');
+                }
+            });
+
+            function chkData() {
+
+                var orgLength = origData.length;
+
+                alert("origData" + JSON.stringify(origData));
+
+                $.each(serverData, function (index, data) {
+
+                    $.ajax({
+                        crossDomain: true,
+                        async: false,
+                        type: "POST",
+                        url: "http://amcdocuments.com/Services/DocuSave.asmx/SaveDocument",
+                        data: JSON.stringify({ dataEnteryName: data.dataEnteryName, dataEnteryDate: data.dataEnteryDate, dataBillingDate: data.dataBillingDate, dataBillingAmt: data.dataBillingAmt }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            if (msg != null) {
+                                obj = $.parseJSON(msg.d);
+                                if (obj[0].Result > 0) {
+                                    RecordId = obj[0].Result;
+
+                                    alert('RecordId: ' + RecordId);
+
+                                    var innerData = $.grep(origData, function (n) { return n.enteryId === data.dataEnteryId; });
+
+                                    alert(JSON.stringify(innerData));
+
+                                    $.each(innerData, function (innerIndex, innerValue) {
+
+                                        var docTitle = innerValue.docTitle;
+                                        var docName = innerValue.docName;
+                                        var imageName = data.dataEnteryName + " " + docTitle;
+
+                                        var options = new FileUploadOptions();
+                                        options.fileKey = "recFile";
+                                        options.fileName = imageName;
+                                        options.mimeType = "image/jpeg";
+                                        options.chunkedMode = false;
+                                        var params = new Object();
+                                        params.dataEnteryDate = data.dataEnteryDate;
+                                        params.dataEnteryName = data.dataEnteryName;
+                                        params.recordId = RecordId;
+                                        params.docTitle = docTitle;
+
+                                        options.params = params;
+
+                                        window.resolveLocalFileSystemURI(docName, function (fileEntry) {
+                                            fileEntry.file(function (fileObj) {
+                                                var fileName = fileObj.fullPath;
+
+                                                var ft = new FileTransfer();
+                                                ft.upload(fileName, encodeURI("http://amcdocuments.com/Services/DocuSave.asmx/SaveImage"), function (r) {
+
+                                                    orgLength = (orgLength - 1);
+
+                                                    if (orgLength == 0) {
+                                                        deleteAll();
+                                                    }
+
+                                                    alert(fileName + 'uploaded successfully');
+
+                                                }, function (error) {
+                                                    if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
+                                                        alert("File " + error.source + " not found");
+                                                    } else if (error.code == FileTransferError.INVALID_URL_ERR) {
+                                                        alert("url " + error.target + " invalid");
+                                                    } else if (error.code == FileTransferError.CONNECTION_ERR) {
+                                                        alert("connection error");
+                                                    } else {
+                                                        alert("unknown error uploading\r\n" + JSON.stringify(error));
+                                                    }
+                                                }, options);
+                                            });
+                                        });
+                                    });
+                                }
+                                else {
+                                    alert("server error : " + obj.Message);
+                                }
+                            }
+                            else {
+                                alert("unknown error while uploading data");
+                            }
+                        },
+                        error: function (jqXHR, exception) {
+                            alert(JSON.stringify(exception));
+                        }
+                    });
+                });
+            }
+
+            function deleteAll() {
+                try {
+                    alert('deleteAll starts');
+                    html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
+
+                    html5sql.process(
+                    [
+                    "DROP TABLE DealersEnteries",
+                    "DROP TABLE DealersDocs",
+                    ],
+                    function () {
+                        alert('Data has been droped');
+                        navigator.camera.cleanup(
+                        function () {
+                            $("#dvMessage").append("<b style\"color:green;\">App cache cleaned</b></br>");
+                            alert('app cache cleaned');
+                        },
+                        function () {
+                            $("#dvMessage").append("<b style\"color:red;\">App cache error while clearing.</b></br>");
+                            alert('App cache error while clearing');
+                        });
+
+                        location = "index.html";
+                    },
+                    function () {
+                        alert("deleteAll: db creation error");
+                    });
+                } catch (e) {
+                    alert("deleteAll:" + e);
+                }
+            }
+        </script>
+</body>
+</html>
