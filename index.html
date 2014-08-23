@@ -35,13 +35,13 @@
         function onCaptureClick() {
             navigator.camera.getPicture(
             function (imageData) {
-               
+
                 var imageHtml = '<div class="item" id="itemNo' + pageNumber + '">';
                 imageHtml += '<h2>Documents Page - ' + pageNumber + '</h2></div>';
                 imageHtml += '<div class="item item-image">';
-                imageHtml += '<img src="' + imageData + '" alt="document image"/>';
+                imageHtml += '<img src="' + imageData + '" alt="document image" style="padding:10px;"/>';
                 imageHtml += '</div>';
-                imageHtml += '<a class="item item-icon-left assertive" href="#" onclick="removeDoc("itemNo' + pageNumber + '");"><i class="icon ion-remove"></i>Remove Document Page - ' + pageNumber + '</a>';
+                imageHtml += '<a class="item item-icon-left assertive" href="#" onclick="removeDoc(' + pageNumber + ');"><i class="icon ion-remove"></i>Remove Page - ' + pageNumber + '</a>';
                 $("#imageCards").append(imageHtml);
 
                 pageNumber = pageNumber + 1;
@@ -53,12 +53,12 @@
             {
                 quality: 50
             });
-            
+
             return false;
         }
 
         function removeDoc(elem) {
-            $(elem).remove();
+            $("#itemNo" + elem).remove();
             return false;
         }
 
@@ -100,18 +100,13 @@
                         <input type="number" id="txtAmount" placeholder="Please select bill amount">
                     </label>
                     <label class="item item-button">
-                        <a id="btnCapture" class="button button-full button-energized icon icon-left ion-ios7-camera" onclick="onCaptureClick();">
-                            Capture Bill Page</a>
+                        <a id="btnCapture" class="button button-full button-energized icon icon-left ion-ios7-camera"
+                            onclick="onCaptureClick();">Capture Bill Page</a>
                     </label>
                 </div>
             </div>
-            <div id="dvImageCapture" style="width: 100%;">
-                <div class="list card" id="imageCards">
-                    
-                </div>
-                <br />
-                <br />
-                <br />
+            <div class="list card" id="imageCards" style="margin:0;padding:0;">
+
             </div>
             <br />
             <br />
