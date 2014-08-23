@@ -1,12 +1,4 @@
-$('[data-toggle=offcanvas]').click(function() {
-  $('.row-offcanvas').toggleClass('active');
-});
-
-$('.btn-toggle').click(function() {
-  $(this).find('.btn').toggleClass('active').toggleClass('btn-default').toggleClass('btn-primary');
-});
-
-function getParameterByName(name) {
+﻿function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
