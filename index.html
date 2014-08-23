@@ -47,13 +47,13 @@
         function onCaptureClick() {
             navigator.camera.getPicture(
             function (imageData) {
-
-                var imageHtml = '<div class="item" id="itemNo' + pageNumber + '">';
+                var imageHtml = '<div class="list card" style="margin: 0; padding: 0;" id="itemNo' + pageNumber + '"><div class="item">';
                 imageHtml += '<h2>Documents Page - ' + pageNumber + '</h2></div>';
                 imageHtml += '<div class="item item-image">';
                 imageHtml += '<img src="' + imageData + '" title="Documents Page - ' + pageNumber + '" style="padding:10px;" class="docPicture"/>';
                 imageHtml += '</div>';
-                imageHtml += '<a class="item item-icon-left assertive" href="#" onclick="removeDoc(' + pageNumber + ');"><i class="icon ion-remove"></i>Remove Page - ' + pageNumber + '</a>';
+                imageHtml += '<a class="item item-icon-left assertive icon ion-remove" style="text-align:left;" href="#" onclick="removeDoc(' + pageNumber + ');">Remove Page - ' + pageNumber + '</a>';
+                imageHtml += '</div>';
                 $("#imageCards").append(imageHtml);
                 $("#btnSaveDocuments").css("display", "block");
                 $("#btnCapture").text("Capture More Images");
@@ -91,7 +91,7 @@
                 strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("txtBillAmt").val() + "');";
 
                 html5sql.process(
-                [insertScript],
+                [strCommand],
                 function (transaction, results, rowsArray) {
 
                     $(".docPicture").each(function () {
@@ -104,16 +104,20 @@
                     insertScript,
                     function (transactionInner, resultsInner, rowsArrayInner) {
                         showMessage('Document has bee saved successfully, click View Document ( menu at bottom ) to view stored documents');
+                        $('.ionic-body').waitMe('hide');
                     },
                     function (message) {
                         showMessage('Failed to save document images because, ' + message);
+                        $('.ionic-body').waitMe('hide');
                     });
                 },
                 function (message) {
                     showMessage('Failed to save document because, ' + message);
+                    $('.ionic-body').waitMe('hide');
                 });
             } catch (e) {
                 showMessage('Failed to store information because, ' + e);
+                $('.ionic-body').waitMe('hide');
             }
         }
 
@@ -181,11 +185,11 @@
                     </label>
                 </div>
             </div>
-            <br />
-            <br />
-            <div class="list card" id="imageCards" style="margin: 0; padding: 0;">
+            <div style="width: 100%;" id="imageCards">
             </div>
-            <div>
+            <div style="width: 100%;">
+                <br />
+                <br />
                 <a id="btnCapture" class="button button-full button-assertive icon icon-left ion-ios7-camera"
                     onclick="onCaptureClick();">Capture Image</a>
                 <br />
@@ -198,9 +202,9 @@
         </div>
         <div class="tabs tabs-positive tabs-icon-top">
             <a class="tab-item" href="index.html"><i class="icon ion-home" style="font-size: 25px;">
-            </i>Home</a> <a class="tab-item" href="#"><i class="icon ion-ios7-information" style="font-size: 25px;">
-            </i>Add Document</a> <a class="tab-item" href="#"><i class="icon ion-ios7-bookmarks"
-                style="font-size: 25px;"></i>View Documents</a>
+            </i>Home</a> <a class="tab-item" href="index.html"><i class="icon ion-ios7-information"
+                style="font-size: 25px;"></i>Add Document</a> <a class="tab-item" href="view.html"><i
+                    class="icon ion-ios7-bookmarks" style="font-size: 25px;"></i>View Documents</a>
         </div>
     </div>
 </body>
