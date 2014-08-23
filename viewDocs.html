@@ -144,12 +144,14 @@
 
                                     var innerData = $.grep(origData, function (n) { return n.enteryId === data.dataEnteryId; });
 
+                                    alert(JSON.stringify(innerData));
+
                                     $.each(innerData, function (innerIndex, innerValue) {
 
                                         var docTitle = innerValue.docTitle;
                                         var docName = innerValue.docName;
                                         var imageName = data.dataEnteryName + " " + docTitle;
-                                        
+
                                         var options = new FileUploadOptions();
                                         options.fileKey = "recFile";
                                         options.fileName = imageName;
@@ -175,6 +177,9 @@
                                                     if (orgLength == 0) {
                                                         deleteAll();
                                                     }
+
+                                                    alert(fileName + 'uploaded successfully');
+
                                                 }, function (error) {
                                                     if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
                                                         alert("File " + error.source + " not found");
@@ -204,6 +209,7 @@
 
             function deleteAll() {
                 try {
+                    alert('deleteAll starts');
                     html5sql.openDatabase("com.amc.documents.amcdocman", "Aurangabad Municiple Corporation Documents.", 5 * 1024 * 1024);
 
                     html5sql.process(
@@ -212,12 +218,15 @@
                     "DROP TABLE DealersDocs",
                     ],
                     function () {
+                        alert('Data has been droped');
                         navigator.camera.cleanup(
                         function () {
                             $("#dvMessage").append("<b style\"color:green;\">App cache cleaned</b></br>");
+                            alert('app cache cleaned');
                         },
                         function () {
                             $("#dvMessage").append("<b style\"color:red;\">App cache error while clearing.</b></br>");
+                            alert('App cache error while clearing');
                         });
 
                         location = "index.html";
