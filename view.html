@@ -17,8 +17,8 @@
         var dbDescription = 'Amc Documents Database.';
         var dbSize = (5 * 1024 * 1024);
 
-
         $(function () {
+            showMessage("Application start");
             html5sql.openDatabase(dbName, dbDescription, dbSize);
 
             html5sql.process(
@@ -27,6 +27,9 @@
                  ],
                  function (transaction, results, rowsArray) {
                      var len = rowsArray.length, i;
+
+                     showMessage("Data received len=" + len);
+
                      if (len > 0) {
                          for (i = 0; i < len; i++) {
                              var list = '<li class="item" style="white-space: normal;">';
@@ -57,7 +60,7 @@
         }
 
         function onDeviceReady() {
-
+            
         }
     </script>
 </head>
