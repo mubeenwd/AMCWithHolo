@@ -90,6 +90,8 @@
 
                 strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("txtBillAmt").val() + "');";
 
+                showMessage(strCommand);
+
                 html5sql.process(
                 [strCommand],
                 function (transaction, results, rowsArray) {
@@ -99,6 +101,8 @@
                         var docSrc = $(this).attr("src");
                         insertScript.push("INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + getCurrentDateAndTime() + "');");
                     });
+
+                    showMessage(insertScript);
 
                     html5sql.process(
                     insertScript,
