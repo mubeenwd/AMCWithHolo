@@ -50,7 +50,7 @@
                 imageHtml += '<img src="data:image/jpeg;base64,' + imageData + '" title="Documents Page - ' + pageNumber + '" style="padding:10px;" class="docPicture"/>';
                 imageHtml += '</div>';
                 imageHtml += '<a class="item item-icon-left assertive icon ion-remove" style="text-align:left;" href="#" onclick="removeDoc(' + pageNumber + ');">Remove Page - ' + pageNumber + '</a>';
-                imageHtml += '</div>';
+                imageHtml += '</div><br/>';
                 $("#imageCards").append(imageHtml);
                 $("#btnSaveDocuments").css("display", "block");
                 $("#btnCapture").text("Capture More Images");
