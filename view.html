@@ -42,14 +42,20 @@
                      showMessage("Data received len=" + len);
 
                      if (len > 0) {
+                         var list = '';
                          for (i = 0; i < len; i++) {
-                             var list = '<li class="item" style="white-space: normal;">';
+                             list += '<li class="item" style="white-space: normal;">';
                              list += '<a style="word-wrap: break-word; white-space: normal;" href="details.html?id=' + rowsArray[i].EnteryId + '">';
                              list += rowsArray[i].EnteryName + ' - Rs.' + rowsArray[i].BillingAmt;
                              list += '</a>';
                              list += '</li>';
-                             $("#docList").append(list);
+
+                             showMessage(rowsArray[i].EnteryId + ', ' + rowsArray[i].EnteryName + ', ' + rowsArray[i].BillingAmt + ', ' + rowsArray[i].BillingDate);
                          }
+
+
+
+                         $("#docList").html(list);
                      }
                      else {
                          showMessage("There is no dealer entery found in your device");
