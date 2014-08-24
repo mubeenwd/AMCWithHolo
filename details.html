@@ -26,52 +26,60 @@
                 color: '#000'
             });
 
-            var id = getParameterByName("id");
+            try {
+                var id = getParameterByName("id");
+                var html = '';
+                if (parseInt(id) > 0) {
 
-            if (parseInt(id) > 0) {
+                    html5sql.openDatabase(dbName, dbDescription, dbSize);
 
-                html5sql.openDatabase(dbName, dbDescription, dbSize);
-
-                html5sql.process(
-                 [
-                    "SELECT * FROM DealersEnteries where EnteryId = " + id
-                 ],
-                 function (transaction, results, rowsArray) {
-                     var len = rowsArray.length, i;
-
-                     $("#dvList").append('<label class="item">');
-                     $("#dvList").append('<b>' + rowsArray[0].EnteryName + '</b>');
-                     $("#dvList").append('</label>');
-                     $("#dvList").append('<label class="item">');
-                     $("#dvList").append('<div class="row"><div class="col">' + rowsArray[0].BillingDate + '</div><div class="col">' + rowsArray[0].BillingAmt + '</div></div>');
-                     $("#dvList").append('</label>');
-
-                     html5sql.process(
+                    html5sql.process(
                      [
-                        "SELECT * FROM DealersDocs where EnteryId = " + id
+                        "SELECT * FROM DealersEnteries where EnteryId = " + id
                      ],
-                     function (transactionInner, resultsInner, rowsArrayInner) {
-                         var lenInner = rowsArrayInner.length, iInner;
-                         for (var i = 0; i < lenInner; i++) {
-                             $("#dvList").append('<label class="item item-image">');
-                             $("#dvList").append('<img src="data:image/jpeg;base64,' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '"  style="padding:10px;" class="docPicture"/>');
-                             $("#dvList").append('</label>');
-                         }
+                     function (transaction, results, rowsArray) {
+                         var len = rowsArray.length, i;
 
-                         $('.ionic-body').waitMe('hide');
+                         html += '<label class="item">';
+                         html += '<b>' + rowsArray[0].EnteryName + '</b>';
+                         html += '</label>';
+                         html += '<label class="item">';
+                         html += '<div class="row"><div class="col">' + rowsArray[0].BillingDate + '</div><div class="col">' + rowsArray[0].BillingAmt + '</div></div>';
+                         html += '</label>';
+
+                         html5sql.process(
+                         [
+                            "SELECT * FROM DealersDocs where EnteryId = " + id
+                         ],
+                         function (transactionInner, resultsInner, rowsArrayInner) {
+                             var lenInner = rowsArrayInner.length, iInner;
+                             for (var i = 0; i < lenInner; i++) {
+                                 html += '<label class="item item-image">';
+                                 html += '<img src="data:image/jpeg;base64,' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '"  style="padding:10px;" class="docPicture"/>';
+                                 html += '</label>';
+                             }
+
+                             $("#dvList").html(html);
+
+                             $('.ionic-body').waitMe('hide');
+                         },
+                         function (error, statement) {
+                             showMessage("Error: " + error.message + " when processing " + statement);
+                             $('.ionic-body').waitMe('hide');
+                         });
                      },
                      function (error, statement) {
                          showMessage("Error: " + error.message + " when processing " + statement);
                          $('.ionic-body').waitMe('hide');
                      });
-                 },
-                 function (error, statement) {
-                     showMessage("Error: " + error.message + " when processing " + statement);
-                     $('.ionic-body').waitMe('hide');
-                 });
-            }
-            else {
-                showMessage('There is problem with your last request, please go back and try agin');
+                }
+                else {
+                    showMessage('There is problem with your last request, please go back and try agin');
+                    $('.ionic-body').waitMe('hide');
+                }
+            } catch (e) {
+                showMessage(e);
+                $('.ionic-body').waitMe('hide');
             }
         }
 
