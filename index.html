@@ -90,7 +90,7 @@
 
                 strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("txtBillAmt").val() + "');";
 
-                showMessage(strCommand);
+                //showMessage(strCommand);
 
                 html5sql.process(
                 [strCommand],
@@ -102,7 +102,7 @@
                         insertScript.push("INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + getCurrentDateAndTime() + "');");
                     });
 
-                    showMessage(insertScript);
+                    //showMessage(insertScript);
 
                     html5sql.process(
                     insertScript,
@@ -190,10 +190,10 @@
                 </div>
             </div>
             <div style="width: 100%;" id="imageCards">
+                <br />
+                <br />
             </div>
             <div style="width: 100%;">
-                <br />
-                <br />
                 <a id="btnCapture" class="button button-full button-assertive icon icon-left ion-ios7-camera"
                     onclick="onCaptureClick();">Capture Image</a>
                 <br />
