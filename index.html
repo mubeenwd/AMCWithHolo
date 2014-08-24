@@ -13,8 +13,7 @@
     <script type="text/javascript">
 
 
-        var pictureSource; // picture source
-        var destinationType; // sets the format of returned value
+       
         var pageNumber = 1;
 
         var dbName = 'com.amc.documents.database';
@@ -24,9 +23,6 @@
         document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
-
-            pictureSource = navigator.camera.PictureSourceType;
-            destinationType = navigator.camera.DestinationType;
 
             html5sql.openDatabase(dbName, dbDescription, dbSize);
 
@@ -47,11 +43,11 @@
         function onCaptureClick() {
             navigator.camera.getPicture(
             function (imageData) {
-                showMessage(imageData);
+                
                 var imageHtml = '<div class="list card" style="margin: 0; padding: 0;" id="itemNo' + pageNumber + '"><div class="item">';
                 imageHtml += '<h2>Documents Page - ' + pageNumber + '</h2></div>';
                 imageHtml += '<div class="item item-image">';
-                imageHtml += '<img src="' + imageData + '" title="Documents Page - ' + pageNumber + '" style="padding:10px;" class="docPicture"/>';
+                imageHtml += '<img src="data:image/jpeg;base64,' + imageData + '" title="Documents Page - ' + pageNumber + '" style="padding:10px;" class="docPicture"/>';
                 imageHtml += '</div>';
                 imageHtml += '<a class="item item-icon-left assertive icon ion-remove" style="text-align:left;" href="#" onclick="removeDoc(' + pageNumber + ');">Remove Page - ' + pageNumber + '</a>';
                 imageHtml += '</div>';
@@ -64,7 +60,11 @@
                 showMessage('Failed because: ' + message);
             },
             {
-                quality: 50
+                quality: 75,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: true,
+                encodingType: Camera.EncodingType.JPEG,
             });
 
             return false;
