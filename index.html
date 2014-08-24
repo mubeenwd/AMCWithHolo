@@ -13,7 +13,7 @@
     <script type="text/javascript">
 
 
-       
+
         var pageNumber = 1;
 
         var dbName = 'com.amc.documents.database';
@@ -52,8 +52,8 @@
                 //imageHtml += '<a class="item item-icon-left assertive icon ion-remove" style="text-align:left;" href="#" onclick="removeDoc(' + pageNumber + ');">Remove Page - ' + pageNumber + '</a>';
                 imageHtml += '</div><br/>';
                 $("#imageCards").append(imageHtml);
-                $("#btnSaveDocuments").css("display", "block");
-                $("#btnCapture").text("Capture More Images");
+//                $("#btnSaveDocuments").css("display", "block");
+//                $("#btnCapture").text("Capture More Images");
                 pageNumber = pageNumber + 1;
             },
             function (message) {
@@ -190,20 +190,21 @@
                     </label>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <a id="btnCapture" class="button button-full button-assertive icon icon-left ion-ios7-camera"
+                        onclick="onCaptureClick();">Capture Image</a>
+                </div>
+                <div class="col">
+                    <a id="btnSaveDocuments" class="button button-full button-stable icon icon-left ion-document"
+                        onclick="onSaveDocumentsClick();">Save Document</a>
+                </div>
+            </div>
             <div style="width: 100%;" id="imageCards">
-                <br />
-                <br />
             </div>
-            <div style="width: 100%;">
-                <a id="btnCapture" class="button button-full button-assertive icon icon-left ion-ios7-camera"
-                    onclick="onCaptureClick();">Capture Image</a>
-                <br />
-                <a id="btnSaveDocuments" style="display: none;" class="button button-full button-stable icon icon-left ion-document"
-                    onclick="onSaveDocumentsClick();">Save Document</a>
-                <br />
-                <br />
-                <br />
-            </div>
+            <br />
+            <br />
+            <br />
         </div>
         <div class="tabs tabs-positive tabs-icon-top">
             <a class="tab-item" href="index.html"><i class="icon ion-home" style="font-size: 25px;">
