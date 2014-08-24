@@ -29,7 +29,7 @@
                      "CREATE TABLE IF NOT EXISTS DealersDocs (DocId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryId , DocTitle, DocName, CreationDate);"
                  ],
                  function () {
-                     showMessage('Your application is ready!');
+                     //showMessage('Your application is ready!');
                  },
                  function (error, statement) {
                      showMessage("Error: " + error.message + " when processing " + statement);
@@ -88,9 +88,7 @@
 
                 html5sql.openDatabase(dbName, dbDescription, dbSize);
 
-                strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("txtBillAmt").val() + "');";
-
-                //showMessage(strCommand);
+                strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("#txtBillAmt").val() + "');";
 
                 html5sql.process(
                 [strCommand],
@@ -101,8 +99,6 @@
                         var docSrc = $(this).attr("src");
                         insertScript.push("INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + getCurrentDateAndTime() + "');");
                     });
-
-                    //showMessage(insertScript);
 
                     html5sql.process(
                     insertScript,

@@ -29,7 +29,13 @@
 
         function onDeviceReady() {
 
-            showMessage("Application start");
+            $(".ionic-body").waitMe({
+                effect: 'ios',
+                text: 'Please wait',
+                bg: 'rgba(255,255,255,0.7)',
+                color: '#000'
+            });
+            
             html5sql.openDatabase(dbName, dbDescription, dbSize);
 
             html5sql.process(
@@ -49,20 +55,19 @@
                              list += rowsArray[i].EnteryName + ' - Rs.' + rowsArray[i].BillingAmt;
                              list += '</a>';
                              list += '</li>';
-
-                             showMessage(rowsArray[i].EnteryId + ', ' + rowsArray[i].EnteryName + ', ' + rowsArray[i].BillingAmt + ', ' + rowsArray[i].BillingDate);
                          }
 
-
-
                          $("#docList").html(list);
+                         $('.ionic-body').waitMe('hide');
                      }
                      else {
                          showMessage("There is no dealer entery found in your device");
+                         $('.ionic-body').waitMe('hide');
                      }
                  },
                  function (error, statement) {
                      showMessage("Error: " + error.message + " when processing " + statement);
+                     $('.ionic-body').waitMe('hide');
                  }
              );
         }

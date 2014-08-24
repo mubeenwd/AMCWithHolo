@@ -8,13 +8,82 @@
     <link rel="stylesheet" href="resc/spinner/waitMe.min.css">
     <script type="text/javascript" src="resc/js/jquery.min.js"></script>
     <script type="text/javascript" src="resc/spinner/waitMe.min.js"></script>
+    <script type="text/javascript" src="resc/js/jquery.query.string.js"></script>
     <script src="phonegap.js" type="text/javascript"></script>
     <script type="text/javascript">
+
+        var dbName = 'com.amc.documents.database';
+        var dbDescription = 'Amc Documents Database.';
+        var dbSize = (5 * 1024 * 1024);
+
         document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
+            $(".ionic-body").waitMe({
+                effect: 'ios',
+                text: 'Please wait',
+                bg: 'rgba(255,255,255,0.7)',
+                color: '#000'
+            });
 
+            var id = getParameterByName("id");
+
+            if (parseInt(id) > 0) {
+
+                html5sql.openDatabase(dbName, dbDescription, dbSize);
+
+                html5sql.process(
+                 [
+                    "SELECT * FROM DealersEnteries where EnteryId = " + id
+                 ],
+                 function (transaction, results, rowsArray) {
+                     var len = rowsArray.length, i;
+
+                     $("#dvList").append('<label class="item">');
+                     $("#dvList").append('<b>' + rowsArray[0].EnteryName + '</b>');
+                     $("#dvList").append('</label>');
+                     $("#dvList").append('<label class="item">');
+                     $("#dvList").append('<div class="row"><div class="col">' + rowsArray[0].BillingDate + '</div><div class="col">' + rowsArray[0].BillingAmt + '</div></div>');
+                     $("#dvList").append('</label>');
+
+                     html5sql.process(
+                     [
+                        "SELECT * FROM DealersDocs where EnteryId = " + id
+                     ],
+                     function (transactionInner, resultsInner, rowsArrayInner) {
+                         var lenInner = rowsArrayInner.length, iInner;
+                         for (var i = 0; i < lenInner; i++) {
+                             $("#dvList").append('<label class="item item-image">');
+                             $("#dvList").append('<img src="data:image/jpeg;base64,' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '"  style="padding:10px;" class="docPicture"/>');
+                             $("#dvList").append('</label>');
+                         }
+
+                         $('.ionic-body').waitMe('hide');
+                     },
+                     function (error, statement) {
+                         showMessage("Error: " + error.message + " when processing " + statement);
+                         $('.ionic-body').waitMe('hide');
+                     });
+                 },
+                 function (error, statement) {
+                     showMessage("Error: " + error.message + " when processing " + statement);
+                     $('.ionic-body').waitMe('hide');
+                 });
+            }
+            else {
+                showMessage('There is problem with your last request, please go back and try agin');
+            }
         }
+
+        function showMessage(error) {
+            navigator.notification.alert(
+                error,
+                function () { },
+                'AMC Documents',
+                'Ok'
+            );
+        }
+
     </script>
 </head>
 <body>
@@ -27,83 +96,8 @@
         </div>
         <div class="content has-header has-footer padding" style="overflow: scroll; height: 100%;"
             id="container">
-            <div style="text-align: center;">
-                <h4>
-                    Aurangabad Municiple Corporations
-                </h4>
-                <h5>
-                    Document Management Systems</h5>
-                <h6>
-                    Local Body Tax</h6>
-                <p style="text-align: left;">
-                    Document Management Systems for Aurangabad Municiple Corporations corporation is
-                    designed and developed by Breakpoint Info Solutions to provide ease of access to
-                    scan and store Local body tax <b>(LBT)</b> Delare's invoices to server through android
-                    enabled mobile devices.
-                </p>
-                <p style="text-align: left;">
-                    This application provides the user interface to add dealer's bill name, amount,
-                    and add images of multiple documents in one bill.
-                </p>
-                <p style="text-align: left;">
-                    Start using the following steps.
-                    <ul class="list" style="text-align: left;">
-                        <div class="item item-divider">
-                            Adding dealer
-                        </div>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                1. this application just click on <code>Add document</code> menu from the footer
-                                menu bar
-                            </p>
-                        </li>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                2. Add Dealer name, amount and date of purchase or sale
-                            </p>
-                        </li>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                3. Click on next will let you to the document capturing screen
-                            </p>
-                        </li>
-                        <div class="item item-divider">
-                            Adding pages to the document
-                        </div>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                1. Click on capture doc which will start your camera screen
-                            </p>
-                        </li>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                2. Plece camera on document and capture image
-                            </p>
-                        </li>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                3. After capturing image two button visible at the bottom save & cancel
-                            </p>
-                        </li>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                4. Click on save button this will save the first page of dealers bill
-                            </p>
-                        </li>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                5. Repeat above steps for as many pages as you have in dealer's bill
-                            </p>
-                        </li>
-                        <li class="item" style="white-space: normal;">
-                            <p style="word-wrap: break-word; white-space: normal;">
-                                6. After all the pages has been captured, click on save button to save the dealer
-                                document.
-                            </p>
-                        </li>
-                    </ul>
-                </p>
-            </div>
+             <div class="list" id="dvList">
+             </div>
             <br />
             <br />
             <br />
@@ -114,5 +108,6 @@
             </i>Add Document</a> <a class="tab-item" href="#"><i class="icon ion-ios7-bookmarks"
                 style="font-size: 25px;"></i>View Documents</a>
         </div>
+    </div>
 </body>
 </html>
