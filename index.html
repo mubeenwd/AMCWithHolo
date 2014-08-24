@@ -42,8 +42,15 @@
             function (imageData) {
 
                 var imageHtml = '';
-                imageHtml += '<label class="item item-image">';
+
+                imageHtml += '<label class="item" data-page-no="' + pageNumber + '">';
+                imageHtml += 'Documents Page - ' + pageNumber;
+                imageHtml += '</label>';
+                imageHtml += '<label class="item item-image" data-page-no="' + pageNumber + '">';
                 imageHtml += '<img src="data:image/jpeg;base64,' + imageData + '" title="Documents Page - ' + pageNumber + '" style="padding:10px;" class="docPicture"/>';
+                imageHtml += '</label>';
+                imageHtml += '<label class="item" data-page-no="' + pageNumber + '">';
+                imageHtml += '<a id="btnCapture" class="button button-small button-full button-assertive icon icon-left ion-ios7-close" onclick="onCloseclick(' + pageNumber + ');">Remove</a>';
                 imageHtml += '</label>';
                 $("#dvList").append(imageHtml);
                 pageNumber = pageNumber + 1;
@@ -62,8 +69,8 @@
             return false;
         }
 
-        function removeDoc(elem) {
-            $("#itemNo" + elem).remove();
+        function onCloseclick(elem) {
+            $('[data-page-no="' + pageNumber + '"]').remove();
             return false;
         }
 
