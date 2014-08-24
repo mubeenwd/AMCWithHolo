@@ -17,7 +17,16 @@
         var dbDescription = 'Amc Documents Database.';
         var dbSize = (5 * 1024 * 1024);
 
-        $(function () {
+        function showMessage(error) {
+            navigator.notification.alert(
+                error,
+                function () { },
+                'AMC Documents',
+                'Ok'
+            );
+        }
+
+        function onDeviceReady() {
             showMessage("Application start");
             html5sql.openDatabase(dbName, dbDescription, dbSize);
 
@@ -48,19 +57,6 @@
                      showMessage("Error: " + error.message + " when processing " + statement);
                  }
              );
-        });
-
-        function showMessage(error) {
-            navigator.notification.alert(
-                error,
-                function () { },
-                'AMC Documents',
-                'Ok'
-            );
-        }
-
-        function onDeviceReady() {
-            
         }
     </script>
 </head>
