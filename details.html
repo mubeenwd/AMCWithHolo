@@ -30,7 +30,7 @@
             try {
                 var id = getParameterByName("id");
 
-                alert("id-" + id);
+                //alert("id-" + id);
                 var html = '';
                 if (parseInt(id) > 0) {
 
@@ -42,12 +42,12 @@
                      ],
                      function (transaction, results, rowsArray) {
                          var len = rowsArray.length, i;
-                         alert("len-" + len);
+                         //alert("len-" + len);
                          html += '<label class="item">';
-                         html += '<b>' + rowsArray[0].EnteryName + '</b>';
+                         html += '<b class="EnteryName">' + rowsArray[0].EnteryName + '</b>';
                          html += '</label>';
                          html += '<label class="item">';
-                         html += '<div class="row"><div class="col">' + rowsArray[0].BillingDate + '</div><div class="col">' + rowsArray[0].BillingAmt + '</div></div>';
+                         html += '<div class="row"><div class="col BillingDate">' + rowsArray[0].BillingDate + '</div><div class="col BillingAmt">' + rowsArray[0].BillingAmt + '</div></div>';
                          html += '</label>';
 
                          html5sql.process(
@@ -56,7 +56,7 @@
                          ],
                          function (transactionInner, resultsInner, rowsArrayInner) {
                              var lenInner = rowsArrayInner.length, iInner;
-                             alert("lenInner-" + lenInner);
+                             //alert("lenInner-" + lenInner);
                              for (var i = 0; i < lenInner; i++) {
                                  html += '<label class="item item-image">';
                                  html += '<img src="data:image/jpeg;base64,' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '"  style="padding:10px;" class="docPicture"/>';
@@ -96,6 +96,21 @@
             );
         }
 
+
+        function OnUploadClick() {
+            var enteryName = $(".EnteryName").val();
+            var billingDate = $(".BillingDate").val();
+            var billingAmt = $(".BillingAmt").val();
+
+            showMessage("EnteryName: " + enteryName + ", BillingDate: " + billingDate + ", BillingAmt: " + billingAmt);
+
+            $(".docPicture").each(function () {
+                var imageData = $(this).attr("src");
+                var imageTitle = $(this).attr("title");
+
+                showMessage("ImageData: " + imageData.length + ", ImageTitle: " + imageTitle);
+            });
+        }
     </script>
 </head>
 <body>
@@ -113,7 +128,7 @@
             <br />
             <div class="list">
                 <label class="item">
-                    <a href="#" class="button button-full icon icon-left ion-share">Upload Document</a>
+                    <a href="#" class="button button-full icon icon-left ion-share" onclick="OnUploadClick();">Upload Document</a>
                 </label>
             </div>
             <br />
