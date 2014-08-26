@@ -25,8 +25,11 @@
                 bg: 'rgba(255,255,255,0.7)',
                 color: '#000'
             });
+
             try {
                 var id = getParameterByName("id");
+
+                alert("id-" + id);
                 var html = '';
                 if (parseInt(id) > 0) {
 
@@ -34,11 +37,11 @@
 
                     html5sql.process(
                      [
-                        "SELECT * FROM DealersEnteries where EnteryId = " + id
+                        "SELECT * FROM DealersEnteries WHERE EnteryId = " + id
                      ],
                      function (transaction, results, rowsArray) {
                          var len = rowsArray.length, i;
-
+                         alert("len-" + len);
                          html += '<label class="item">';
                          html += '<b>' + rowsArray[0].EnteryName + '</b>';
                          html += '</label>';
@@ -52,6 +55,7 @@
                          ],
                          function (transactionInner, resultsInner, rowsArrayInner) {
                              var lenInner = rowsArrayInner.length, iInner;
+                             alert("lenInner-" + lenInner);
                              for (var i = 0; i < lenInner; i++) {
                                  html += '<label class="item item-image">';
                                  html += '<img src="data:image/jpeg;base64,' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '"  style="padding:10px;" class="docPicture"/>';
