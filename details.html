@@ -49,6 +49,7 @@
                          html += '<label class="item">';
                          html += '<b class="EnteryName">' + rowsArray[0].EnteryName + '</b>';
                          html += '<input type="hidden" id="CreationDate" value="' + rowsArray[0].CreationDate + '"/>';
+                         html += '<input type="hidden" id="BillingDate" value="' + rowsArray[0].BillingDate + '"/>';
                          html += '</label>';
                          html += '<label class="item">';
                          html += '<div class="row"><div class="col BillingDate" style="text-align:left;">' + spltBillingDate[0] + '</div><div class="col BillingAmt"  style="text-align:right;">Rs. ' + rowsArray[0].BillingAmt + '</div></div>';
@@ -60,7 +61,7 @@
                          ],
                          function (transactionInner, resultsInner, rowsArrayInner) {
                              var lenInner = rowsArrayInner.length, iInner;
-                             //alert("lenInner-" + lenInner);
+                             
                              for (var i = 0; i < lenInner; i++) {
                                  html += '<label class="item item-image">';
                                  html += '<img src="' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '"  style="padding:10px;" class="docPicture"/>';
@@ -110,14 +111,10 @@
             });
 
             var enteryName = $(".EnteryName").html();
-            var billingDate = $(".BillingDate").html();
+            var billingDate = $("#BillingDate").val();
             var billingAmt = $(".BillingAmt").html();
-            var creationDate = $("#CreationDate").html();
+            var creationDate = $("#CreationDate").val();
 
-            showMessage(enteryName + ', ' +
-                        billingDate + ', ' +
-                        billingAmt + ', ' +
-                        creationDate);
             $.ajax({
                 crossDomain: true,
                 type: "POST",
