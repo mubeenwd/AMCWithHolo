@@ -114,6 +114,10 @@
             var billingAmt = $(".BillingAmt").html();
             var creationDate = $("#CreationDate").html();
 
+            showMessage(enteryName + ', ' +
+                        billingDate + ', ' +
+                        billingAmt + ', ' +
+                        creationDate);
             $.ajax({
                 crossDomain: true,
                 type: "POST",
@@ -150,7 +154,7 @@
                         showMessage('Unable to process your request, please check your internet connecttion or ty again later!');
                         $('.ionic-body').waitMe('hide');
                     } else {
-                        showMessage('Sorry, There was a problem with your last request. Please contact supprt!');
+                        showMessage('Sorry, There was a problem with your last request. Please contact supprt! ' + JSON.stringfy(exception));
                         $('.ionic-body').waitMe('hide');
                     }
                 }
