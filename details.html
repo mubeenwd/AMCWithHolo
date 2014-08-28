@@ -16,7 +16,7 @@
         var dbName = 'com.amc.documents.database';
         var dbDescription = 'Amc Documents Database.';
         var dbSize = (5 * 1024 * 1024);
-
+        var id = 0;
         document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
@@ -28,7 +28,7 @@
             });
 
             try {
-                var id = getParameterByName("id");
+                id = getParameterByName("id");
 
                 showMessage("id-" + id);
 
@@ -139,7 +139,7 @@
                                 var imageName = $(this).attr("src");
                                 var imageTitle = $(this).attr("title");
 
-                                showMessage("imageName=" + imageName + ", imageTitle" + imageTitle);
+                                //showMessage("imageName=" + imageName + ", imageTitle" + imageTitle);
 
                                 var options = new FileUploadOptions();
                                 options.fileKey = "recFile";
@@ -156,24 +156,23 @@
 
                                 window.resolveLocalFileSystemURI(imageName, function (fileEntry) {
 
-                                    showMessage("resolveLocalFileSystemURI");
+                                    //showMessage("resolveLocalFileSystemURI");
 
                                     fileEntry.file(function (fileObj) {
                                         var fileName = fileObj.fullPath;
-                                        showMessage("Transfer starting fileName=" + fileName);
+                                        //showMessage("Transfer starting fileName=" + fileName);
                                         var ft = new FileTransfer();
                                         ft.upload(fileName, encodeURI("http://amcdocuments.com/Services/DocuSave.asmx/SaveImage"), function (r) {
 
                                             imageLength--;
 
                                             fileEntry.remove(function () {
-                                                showMessage(fileName + " has been removed,imageLength=" + imageLength);
+                                                //showMessage(fileName + " has been removed,imageLength=" + imageLength);
                                             }, function () {
-                                                showMessage(fileName + " couldent removed error occured,imageLength=" + imageLength);
+                                                //showMessage(fileName + " couldent removed error occured,imageLength=" + imageLength);
                                             });
 
                                             if (imageLength == 0) {
-                                                $('.ionic-body').waitMe('hide');
                                                 deleteAll();
                                             }
                                         }, function (error) {
