@@ -132,37 +132,49 @@
                             showMessage('docPictur' + $('.docPicture').length + ' RecordId=' + RecordId);
 
                             $(".docPicture").each(function () {
-                                var imageData = $(this).attr("src");
+                                var imageName = $(this).attr("src");
                                 var imageTitle = $(this).attr("title");
 
-                                $.ajax({
-                                    crossDomain: true,
-                                    async: false,
-                                    type: "POST",
-                                    url: "http://amcdocuments.com/Services/DocuSave.asmx/SaveDocumentImage",
-                                    data: JSON.stringify({ DocImageName: imageTitle, DocDateCreated: billingDate, DocImageData: imageData, DocumentId: RecordId }),
-                                    contentType: "application/json; charset=utf-8",
-                                    dataType: "json",
-                                    success: function (innerMsg) {
-                                        if (innerMsg != null) {
-                                            objInner = $.parseJSON(innerMsg.d);
-                                            if (objInner[0].Result > 0) {
-                                                showMessage(objInner[0].Error + ', ' + imageTitle);
+                                var options = new FileUploadOptions();
+                                options.fileKey = "recFile";
+                                options.fileName = imageName;
+                                options.mimeType = "image/jpeg";
+                                options.chunkedMode = false;
+                                var params = new Object();
+                                params.dataEnteryDate = billingDate;
+                                params.dataEnteryName = enteryName;
+                                params.recordId = RecordId;
+                                params.docTitle = imageTitle;
+
+                                options.params = params;
+
+                                window.resolveLocalFileSystemURI(docName, function (fileEntry) {
+                                    fileEntry.file(function (fileObj) {
+                                        var fileName = fileObj.fullPath;
+
+                                        var ft = new FileTransfer();
+                                        ft.upload(fileName, encodeURI("http://amcdocuments.com/Services/DocuSave.asmx/SaveImage"), function (r) {
+
+                                            orgLength = (orgLength - 1);
+
+                                            if (orgLength == 0) {
+                                                deleteAll();
                                             }
-                                            else {
-                                                showMessage('Record not found for ' + imageTitle);
+
+                                            showMessage(fileName + 'uploaded successfully');
+
+                                        }, function (error) {
+                                            if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
+                                                showMessage("File " + error.source + " not found");
+                                            } else if (error.code == FileTransferError.INVALID_URL_ERR) {
+                                                showMessage("url " + error.target + " invalid");
+                                            } else if (error.code == FileTransferError.CONNECTION_ERR) {
+                                                showMessage("connection error");
+                                            } else {
+                                                showMessage("unknown error uploading\r\n" + JSON.stringify(error));
                                             }
-                                        } else {
-                                            showMessage('msg not found for ' + imageTitle);
-                                        }
-                                    },
-                                    error: function (jqXHR, exception) {
-                                        if (jqXHR.status === 0) {
-                                            showMessage(imageTitle + ', Unable to process your request, please check your internet connecttion or ty again later! ' + jqXHR.responseText);
-                                        } else {
-                                            showMessage(imageTitle + ', Sorry, There was a problem with your last request. Please contact supprt! ' + jqXHR.responseText);
-                                        }
-                                    }
+                                        }, options);
+                                    });
                                 });
                             });
 
@@ -189,9 +201,36 @@
             });
         }
 
-        
-        function saveDocImages(docImageName, docDateCreated, docImageData, documentId) {
-            
+        function deleteAll() {
+            try {
+
+                html5sql.openDatabase(dbName, dbDescription, dbSize);
+                
+                html5sql.process(
+                    [
+                    "DROP TABLE DealersEnteries WHERE EnteryId = " + id,
+                    "DROP TABLE DealersDocs WHERE EnteryId = " + id",
+                    ],
+                    function () {
+                        alert('Data has been droped');
+                        navigator.camera.cleanup(
+                        function () {
+                            $("#dvMessage").append("<b style\"color:green;\">App cache cleaned</b></br>");
+                            showMessage('app cache cleaned');
+                        },
+                        function () {
+                            $("#dvMessage").append("<b style\"color:red;\">App cache error while clearing.</b></br>");
+                            showMessage('App cache error while clearing');
+                        });
+
+                        location = "index.html";
+                    },
+                    function () {
+                        showMessage("deleteAll: db creation error");
+                    });
+            } catch (e) {
+                showMessage("deleteAll:" + e);
+            }
         }
         
     </script>
