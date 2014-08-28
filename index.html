@@ -97,6 +97,8 @@
                         insertScript.push("INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + getCurrentDateAndTime() + "');");
                     });
 
+                    showMessage(insertScript);
+
                     html5sql.process(
                     insertScript,
                     function (transactionInner, resultsInner, rowsArrayInner) {
