@@ -65,7 +65,7 @@
                              
                              for (var i = 0; i < lenInner; i++) {
                                  html += '<label class="item item-image">';
-                                 html += '<img src="' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '"  style="padding:10px;" class="docPicture"/>';
+                                 html += '<img src="' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '" style="padding:10px;" class="docPicture"/>';
                                  html += '</label>';
                              }
 
@@ -116,11 +116,6 @@
             var billingAmt = $("#BillingAmt").val();
             var creationDate = $("#CreationDate").val();
 
-//            showMessage('enteryName=' + enteryName + ', ' +
-//                        'billingDate=' + billingDate + ', ' +
-//                        'billingAmt=' + billingAmt + ', ' +
-//                        'creationDate=' + creationDate);
-
             $.ajax({
                 crossDomain: true,
                 type: "POST",
@@ -138,7 +133,34 @@
                                 var imageData = $(this).attr("src");
                                 var imageTitle = $(this).attr("title");
 
-                                saveDocImages(imageTitle, billingDate, imageData, RecordId);
+                                $.ajax({
+                                    crossDomain: true,
+                                    type: "POST",
+                                    url: "http://amcdocuments.com/Services/DocuSave.asmx/SaveDocumentImage",
+                                    data: JSON.stringify({ DocImageName: imageTitle, DocDateCreated: billingDate, DocImageData: imageData, DocumentId: RecordId }),
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    success: function (msg) {
+                                        if (msg != null) {
+                                            obj = $.parseJSON(msg.d);
+                                            if (obj[0].Result > 0) {
+                                                RecordId = obj[0].Result;
+                                            }
+                                            else {
+                                                howMessage(imageTitle + ', Result not found!');
+                                            }
+                                        }
+                                    },
+                                    error: function (jqXHR, exception) {
+                                        if (jqXHR.status === 0) {
+                                            showMessage(imageTitle + ', Unable to process your request, please check your internet connecttion or ty again later!');
+                                            $('.ionic-body').waitMe('hide');
+                                        } else {
+                                            showMessage(imageTitle + ', Sorry, There was a problem with your last request. Please contact supprt!');
+                                            $('.ionic-body').waitMe('hide');
+                                        }
+                                    }
+                                });
                             });
 
                             $('.ionic-body').waitMe('hide');
@@ -166,32 +188,7 @@
 
         
         function saveDocImages(docImageName, docDateCreated, docImageData, documentId) {
-            $.ajax({
-                crossDomain: true,
-                async: false,
-                type: "POST",
-                url: "http://amcdocuments.com/Services/DocuSave.asmx/SaveDocumentImage",
-                data: JSON.stringify({ DocImageName: docImageName, DocDateCreated: docDateCreated, DocImageData: docImageData, DocumentId: documentId }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    if (msg != null) {
-                        obj = $.parseJSON(msg.d);
-                        if (obj[0].Result > 0) {
-                            RecordId = obj[0].Result;
-                        }
-                    }
-                },
-                error: function (jqXHR, exception) {
-                    if (jqXHR.status === 0) {
-                        showMessage('Unable to process your request, please check your internet connecttion or ty again later!');
-                        $('.ionic-body').waitMe('hide');
-                    } else {
-                        showMessage('Sorry, There was a problem with your last request. Please contact supprt!');
-                        $('.ionic-body').waitMe('hide');
-                    }
-                }
-            });
+            
         }
         
     </script>
