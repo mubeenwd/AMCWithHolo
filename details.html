@@ -129,13 +129,17 @@
                     if (msg != null) {
                         obj = $.parseJSON(msg.d);
                         if (obj[0].Result > 0) {
+
                             RecordId = obj[0].Result;
+
                             var imageLength = $(".docPicture").length;
 
                             $(".docPicture").each(function () {
 
                                 var imageName = $(this).attr("src");
                                 var imageTitle = $(this).attr("title");
+
+                                showMessage("imageName=" + imageName + ", imageTitle" + imageTitle);
 
                                 var options = new FileUploadOptions();
                                 options.fileKey = "recFile";
@@ -150,15 +154,26 @@
 
                                 options.params = params;
 
-                                window.resolveLocalFileSystemURI(docName, function (fileEntry) {
+                                window.resolveLocalFileSystemURI(imageName, function (fileEntry) {
+
+                                    showMessage("resolveLocalFileSystemURI");
+
                                     fileEntry.file(function (fileObj) {
                                         var fileName = fileObj.fullPath;
-
+                                        showMessage("Transfer starting fileName=" + fileName);
                                         var ft = new FileTransfer();
                                         ft.upload(fileName, encodeURI("http://amcdocuments.com/Services/DocuSave.asmx/SaveImage"), function (r) {
-                                            fileEntry.remove(function () { }, function () { });
+
                                             imageLength--;
+
+                                            fileEntry.remove(function () {
+                                                showMessage(fileName + " has been removed,imageLength=" + imageLength);
+                                            }, function () {
+                                                showMessage(fileName + " couldent removed error occured,imageLength=" + imageLength);
+                                            });
+
                                             if (imageLength == 0) {
+                                                $('.ionic-body').waitMe('hide');
                                                 deleteAll();
                                             }
                                         }, function (error) {
@@ -175,8 +190,6 @@
                                     });
                                 });
                             });
-
-                            $('.ionic-body').waitMe('hide');
                         }
                         else {
                             showMessage("There is some problem with your last request, please check back later");
