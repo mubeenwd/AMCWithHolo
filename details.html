@@ -137,29 +137,30 @@
 
                                 $.ajax({
                                     crossDomain: true,
+                                    async: false,
                                     type: "POST",
                                     url: "http://amcdocuments.com/Services/DocuSave.asmx/SaveDocumentImage",
                                     data: JSON.stringify({ DocImageName: imageTitle, DocDateCreated: billingDate, DocImageData: imageData, DocumentId: RecordId }),
                                     contentType: "application/json; charset=utf-8",
                                     dataType: "json",
-                                    success: function (msg) {
-                                        if (msg != null) {
-                                            obj = $.parseJSON(msg.d);
-                                            if (obj[0].Result > 0) {
-                                                RecordId = obj[0].Result;
+                                    success: function (innerMsg) {
+                                        if (innerMsg != null) {
+                                            objInner = $.parseJSON(innerMsg.d);
+                                            if (objInner[0].Result > 0) {
+                                                showMessage(objInner[0].Error + ', ' + imageTitle);
                                             }
                                             else {
-                                                howMessage(imageTitle + ', Result not found!');
+                                                showMessage('Record not found for ' + imageTitle);
                                             }
+                                        } else {
+                                            showMessage('msg not found for ' + imageTitle);
                                         }
                                     },
                                     error: function (jqXHR, exception) {
                                         if (jqXHR.status === 0) {
-                                            showMessage(imageTitle + ', Unable to process your request, please check your internet connecttion or ty again later!');
-                                            $('.ionic-body').waitMe('hide');
+                                            showMessage(imageTitle + ', Unable to process your request, please check your internet connecttion or ty again later! ' + jqXHR.responseText);
                                         } else {
-                                            showMessage(imageTitle + ', Sorry, There was a problem with your last request. Please contact supprt!');
-                                            $('.ionic-body').waitMe('hide');
+                                            showMessage(imageTitle + ', Sorry, There was a problem with your last request. Please contact supprt! ' + jqXHR.responseText);
                                         }
                                     }
                                 });
