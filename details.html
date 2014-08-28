@@ -129,6 +129,8 @@
                         if (obj[0].Result > 0) {
                             RecordId = obj[0].Result;
 
+                            showMessage('docPictur' + $('.docPicture').length + ' RecordId=' + RecordId);
+
                             $(".docPicture").each(function () {
                                 var imageData = $(this).attr("src");
                                 var imageTitle = $(this).attr("title");
