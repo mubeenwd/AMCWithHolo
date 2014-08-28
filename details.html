@@ -218,8 +218,8 @@
 
                 html5sql.process(
                     [
-                    "DROP TABLE DealersEnteries WHERE EnteryId = " + id,
-                    "DROP TABLE DealersDocs WHERE EnteryId = " + id,
+                    "DELETE FROM DealersEnteries WHERE EnteryId = " + id,
+                    "DELETE FROM DealersDocs WHERE EnteryId = " + id,
                     ],
                     function () {
                         showMessage("Document has been uploaded successfully!");
