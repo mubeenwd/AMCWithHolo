@@ -130,10 +130,10 @@
                         obj = $.parseJSON(msg.d);
                         if (obj[0].Result > 0) {
                             RecordId = obj[0].Result;
-
-                            showMessage('docPictur' + $('.docPicture').length + ' RecordId=' + RecordId);
+                            var imageLength = $(".docPicture").length;
 
                             $(".docPicture").each(function () {
+
                                 var imageName = $(this).attr("src");
                                 var imageTitle = $(this).attr("title");
 
@@ -156,15 +156,11 @@
 
                                         var ft = new FileTransfer();
                                         ft.upload(fileName, encodeURI("http://amcdocuments.com/Services/DocuSave.asmx/SaveImage"), function (r) {
-
-                                            orgLength = (orgLength - 1);
-
-                                            if (orgLength == 0) {
+                                            fileEntry.remove(function () { }, function () { });
+                                            imageLength--;
+                                            if (imageLength == 0) {
                                                 deleteAll();
                                             }
-
-                                            showMessage(fileName + 'uploaded successfully');
-
                                         }, function (error) {
                                             if (error.code == FileTransferError.FILE_NOT_FOUND_ERR) {
                                                 showMessage("File " + error.source + " not found");
@@ -214,16 +210,7 @@
                     "DROP TABLE DealersDocs WHERE EnteryId = " + id,
                     ],
                     function () {
-                        alert('Data has been droped');
-                        navigator.camera.cleanup(
-                        function () {
-                            showMessage('app cache cleaned');
-                        },
-                        function () {
-                            $("#dvMessage").append("<b style\"color:red;\">App cache error while clearing.</b></br>");
-                            showMessage('App cache error while clearing');
-                        });
-
+                        showMessage("Document has been uploaded successfully!");
                         location = "index.html";
                     },
                     function () {
