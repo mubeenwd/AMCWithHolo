@@ -64,7 +64,7 @@
                          ],
                          function (transactionInner, resultsInner, rowsArrayInner) {
                              var lenInner = rowsArrayInner.length, iInner;
-                             
+
                              for (var i = 0; i < lenInner; i++) {
                                  html += '<label class="item item-image">';
                                  html += '<img src="' + rowsArrayInner[i].DocName + '" title="' + rowsArrayInner[i].DocTitle + '" style="padding:10px;" class="docPicture"/>';
@@ -207,17 +207,16 @@
             try {
 
                 html5sql.openDatabase(dbName, dbDescription, dbSize);
-                
+
                 html5sql.process(
                     [
                     "DROP TABLE DealersEnteries WHERE EnteryId = " + id,
-                    "DROP TABLE DealersDocs WHERE EnteryId = " + id",
+                    "DROP TABLE DealersDocs WHERE EnteryId = " + id,
                     ],
                     function () {
                         alert('Data has been droped');
                         navigator.camera.cleanup(
                         function () {
-                            $("#dvMessage").append("<b style\"color:green;\">App cache cleaned</b></br>");
                             showMessage('app cache cleaned');
                         },
                         function () {
@@ -252,7 +251,8 @@
             <br />
             <div class="list">
                 <label class="item">
-                    <a href="#" class="button button-full icon icon-left ion-share" onclick="OnUploadClick();">Upload Document</a>
+                    <a href="#" class="button button-full icon icon-left ion-share" onclick="OnUploadClick();">
+                        Upload Document</a>
                 </label>
             </div>
             <br />
