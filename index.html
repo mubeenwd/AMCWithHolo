@@ -31,31 +31,7 @@
                      "CREATE TABLE IF NOT EXISTS DealersNames (DealerNameId INTEGER PRIMARY KEY AUTOINCREMENT, DealerName);"
                  ],
                  function () {
-                     html5sql.process(
-                        [
-                            "SELECT DealerName FROM DealersNames"
-                        ],
-                        function (transaction, results, rowsArray) {
-                            var len = rowsArray.length, i;
-                            var dealersArray = [];
-
-                            if (len > 0) {
-                                for (var i = 0; i < len; i++) {
-                                    dealersArray.push({ value: rowsArray[i].DealerName, data: rowsArray[i].DealerName });
-                                }
-
-                                $("#txtDealer").autocomplete({
-                                    lookup: dealersArray,
-                                    onSelect: function (suggestion) {
-
-                                    }
-                                });
-                            }
-                        },
-                        function (error, statement) {
-
-                        }
-                     );
+                     
                  },
                  function (error, statement) {
                      showMessage("Error: " + error.message + " when processing " + statement);
@@ -127,7 +103,6 @@
                         html5sql.process(
                         insertScript,
                         function (transactionInner, resultsInner, rowsArrayInner) {
-                            addDealerIfNotExist();
                             showMessage('Document has bee saved successfully');
                             location = "view.html";
                             $('.ionic-body').waitMe('hide');
@@ -176,37 +151,6 @@
                 + currentdate.getSeconds();
 
             return datetime;
-        }
-
-        function addDealerIfNotExist() {
-            try {
-                html5sql.process(
-                    [
-                        "SELECT count(*) as RecordCount FROM DealersNames  WHERE DealersName = '" + $("#txtDealer").val() + "'"
-                    ],
-                    function (t, r, rw) {
-                        if (rw.length > 0) {
-                            if (rw[0].RecordCount == 0)
-                                html5sql.process(
-                            [
-                                "INSERT INTO DealersNames(DealersName) VALUE('" + $("#txtDealer").val() + "');"
-                            ],
-                            function (transaction, results, rowsArray) {
-
-                            },
-                            function (error, statement) {
-
-                            }
-                            );
-                        }
-                    },
-                    function (error, statement) {
-
-                    }
-                    );
-            } catch (e) {
-
-            }
         }
     </script>
     <style type="text/css">
