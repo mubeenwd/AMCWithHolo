@@ -25,7 +25,7 @@
 
             html5sql.process(
                  [
-                     "CREATE TABLE IF NOT EXISTS DealersEnteries (EnteryId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryName, CreationDate,BillingDate,BillingAmt);",
+                     "CREATE TABLE IF NOT EXISTS DealersEnteries (EnteryId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryName, CreationDate,BillingDate,BillingAmt,InvoiceNo);",
                      "CREATE TABLE IF NOT EXISTS DealersDocs (DocId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryId , DocTitle, DocName, CreationDate);"
                  ],
                  function () {
@@ -85,7 +85,7 @@
 
                 html5sql.openDatabase(dbName, dbDescription, dbSize);
 
-                strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("#txtBillAmt").val() + "');";
+                strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt,InvoiceNo) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("#txtBillAmt").val() + "','" + $("#txtInvoiceNo").val() + "');";
 
                 html5sql.process(
                 [strCommand],
@@ -170,6 +170,11 @@
                         <input type="text" id="txtDealer" placeholder="Please enter dealer name" style="border: solid 1px #ddd;
                             margin: 5px; padding: 5px;">
                     </label>
+                    <label class="item item-input icon ion-android">
+                        &nbsp;&nbsp;
+                        <input type="number" id="txtInvoiceNo" placeholder="Please enter invoice no" style="border: solid 1px #ddd;
+                            margin: 5px; padding: 5px;">
+                    </label>
                     <label class="item item-input icon ion-android-calendar">
                         &nbsp;&nbsp;
                         <input type="date" id="txtBillDate" placeholder="Please select bill date" style="border: solid 1px #ddd;
@@ -177,7 +182,7 @@
                     </label>
                     <label class="item item-input icon ion-pricetag">
                         &nbsp;&nbsp;
-                        <input type="number" id="txtBillAmt" placeholder="Please select bill amount" style="border: solid 1px #ddd;
+                        <input type="number" id="txtBillAmt" placeholder="Please enter bill amount" style="border: solid 1px #ddd;
                             margin: 5px; padding: 5px;">
                     </label>
                 </div>

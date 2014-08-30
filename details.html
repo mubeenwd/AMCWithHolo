@@ -49,6 +49,7 @@
                          html += '<input type="hidden" id="CreationDate" value="' + rowsArray[0].CreationDate + '"/>';
                          html += '<input type="hidden" id="BillingDate" value="' + rowsArray[0].BillingDate + '"/>';
                          html += '<input type="hidden" id="BillingAmt" value="' + rowsArray[0].BillingAmt + '"/>';
+                         html += '<input type="hidden" id="InvoiceNo" value="' + rowsArray[0].InvoiceNo + '"/>';
                          html += '</label>';
                          html += '<label class="item">';
                          html += '<div class="row"><div class="col BillingDate" style="text-align:left;">' + spltBillingDate[0] + '</div><div class="col BillingAmt"  style="text-align:right;">Rs. ' + rowsArray[0].BillingAmt + '</div></div>';
@@ -113,12 +114,13 @@
             var billingDate = $("#BillingDate").val();
             var billingAmt = $("#BillingAmt").val();
             var creationDate = $("#CreationDate").val();
+            var invoiceNo = $("#InvoiceNo").val();
 
             $.ajax({
                 crossDomain: true,
                 type: "POST",
                 url: "http://amcdocuments.com/Services/DocuSave.asmx/SaveDocument",
-                data: JSON.stringify({ dataEnteryName: enteryName, dataEnteryDate: creationDate, dataBillingDate: billingDate, dataBillingAmt: billingAmt }),
+                data: JSON.stringify({ dataEnteryName: enteryName, dataEnteryDate: creationDate, dataBillingDate: billingDate, dataBillingAmt: billingAmt, dataInvoiceNo: invoiceNo }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
