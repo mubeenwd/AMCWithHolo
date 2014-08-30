@@ -145,6 +145,8 @@
                     });
                 },
                 function (message) {
+                    showMessage('Failed to save document because, ' + message);
+                    $('.ionic-body').waitMe('hide');
                 }
                 );
             } catch (e) {
