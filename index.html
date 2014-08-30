@@ -23,7 +23,7 @@
         function onDeviceReady() {
 
             html5sql.openDatabase(dbName, dbDescription, dbSize);
-
+            
             html5sql.process(
                  [
                      "CREATE TABLE IF NOT EXISTS DealersEnteries (EnteryId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryName, CreationDate,BillingDate,BillingAmt,InvoiceNo);",
@@ -100,7 +100,8 @@
         function onSaveDocumentsClick() {
             try {
                 var insertScript = [];
-                var strCommand = '';
+                var strCommand = [];
+                var dealerName = $("#txtDealer").val();
 
                 $(".ionic-body").waitMe({
                     effect: 'ios',
@@ -111,33 +112,41 @@
 
                 html5sql.openDatabase(dbName, dbDescription, dbSize);
 
-                strCommand = "INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt,InvoiceNo) VALUES('" + $("#txtDealer").val() + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("#txtBillAmt").val() + "','" + $("#txtInvoiceNo").val() + "');";
-
                 html5sql.process(
-                [strCommand],
-                function (transaction, results, rowsArray) {
+                ["INSERT INTO DealersNames (DealerName)VALUES(" + dealerName + ")"],
+                function (t, res, rarr) {
 
-                    $(".docPicture").each(function () {
-                        var docTitle = $(this).attr("title");
-                        var docSrc = $(this).attr("src");
-                        insertScript.push("INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + getCurrentDateAndTime() + "');");
-                    });
+                    strCommand.push("INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt,InvoiceNo) VALUES('" + dealerName + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("#txtBillAmt").val() + "','" + $("#txtInvoiceNo").val() + "');");
 
                     html5sql.process(
-                    insertScript,
-                    function (transactionInner, resultsInner, rowsArrayInner) {
-                        showMessage('Document has bee saved successfully, click View Document ( menu at bottom ) to view stored documents');
-                        $('.ionic-body').waitMe('hide');
+                    strCommand,
+                    function (transaction, results, rowsArray) {
+
+                        $(".docPicture").each(function () {
+                            var docTitle = $(this).attr("title");
+                            var docSrc = $(this).attr("src");
+                            insertScript.push("INSERT INTO DealersDocs (EnteryId , DocTitle, DocName, CreationDate) VALUES(" + results.insertId + ",'" + docTitle + "','" + docSrc + "','" + getCurrentDateAndTime() + "');");
+                        });
+
+                        html5sql.process(
+                        insertScript,
+                        function (transactionInner, resultsInner, rowsArrayInner) {
+                            showMessage('Document has bee saved successfully, click View Document ( menu at bottom ) to view stored documents');
+                            $('.ionic-body').waitMe('hide');
+                        },
+                        function (message) {
+                            showMessage('Failed to save document images because, ' + message);
+                            $('.ionic-body').waitMe('hide');
+                        });
                     },
                     function (message) {
-                        showMessage('Failed to save document images because, ' + message);
+                        showMessage('Failed to save document because, ' + message);
                         $('.ionic-body').waitMe('hide');
                     });
                 },
                 function (message) {
-                    showMessage('Failed to save document because, ' + message);
-                    $('.ionic-body').waitMe('hide');
-                });
+                }
+                );
             } catch (e) {
                 showMessage('Failed to store information because, ' + e);
                 $('.ionic-body').waitMe('hide');
