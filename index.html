@@ -113,7 +113,7 @@
                 html5sql.openDatabase(dbName, dbDescription, dbSize);
 
                 html5sql.process(
-                ["INSERT INTO DealersNames (DealerName)VALUES(" + dealerName + ")"],
+                ["INSERT INTO DealersNames (DealerName)VALUES('" + dealerName + "')"],
                 function (t, res, rarr) {
 
                     strCommand.push("INSERT INTO DealersEnteries (EnteryName, CreationDate,BillingDate,BillingAmt,InvoiceNo) VALUES('" + dealerName + "','" + getCurrentDateAndTime() + "','" + ($("#txtBillDate").val() + getCurrentTime()) + "','" + $("#txtBillAmt").val() + "','" + $("#txtInvoiceNo").val() + "');");
@@ -228,7 +228,7 @@
                         <input type="text" id="txtDealer" placeholder="Please enter dealer name" style="border: solid 1px #ddd;
                             margin: 5px; padding: 5px;">
                     </label>
-                    <label class="item item-input icon ion-android">
+                    <label class="item item-input icon ion-android-note">
                         &nbsp;&nbsp;
                         <input type="number" id="txtInvoiceNo" placeholder="Please enter invoice no" style="border: solid 1px #ddd;
                             margin: 5px; padding: 5px;">
