@@ -47,7 +47,7 @@
                                 $("#txtDealer").autocomplete({
                                     lookup: dealersArray,
                                     onSelect: function (suggestion) {
-                                        
+
                                     }
                                 });
                             }
@@ -175,6 +175,29 @@
             return datetime;
         }
     </script>
+    <style type="text/css">
+        .autocomplete-suggestions
+        {
+            border: 1px solid #999;
+            background: #FFF;
+            overflow: auto;
+        }
+        .autocomplete-suggestion
+        {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .autocomplete-selected
+        {
+            background: #F0F0F0;
+        }
+        .autocomplete-suggestions strong
+        {
+            font-weight: normal;
+            color: #3399FF;
+        }
+    </style>
 </head>
 <body>
     <div class="ionic-body">
