@@ -9,6 +9,7 @@
     <script type="text/javascript" src="resc/js/jquery.min.js"></script>
     <script type="text/javascript" src="resc/spinner/waitMe.min.js"></script>
     <script type="text/javascript" src="resc/js/html5sql.js"></script>
+    <script type="text/javascript" src="resc/js/jquery.autocomplete.min.js"></script>
     <script src="phonegap.js" type="text/javascript"></script>
     <script type="text/javascript">
         var pageNumber = 1;
@@ -26,10 +27,35 @@
             html5sql.process(
                  [
                      "CREATE TABLE IF NOT EXISTS DealersEnteries (EnteryId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryName, CreationDate,BillingDate,BillingAmt,InvoiceNo);",
-                     "CREATE TABLE IF NOT EXISTS DealersDocs (DocId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryId , DocTitle, DocName, CreationDate);"
+                     "CREATE TABLE IF NOT EXISTS DealersDocs (DocId INTEGER PRIMARY KEY AUTOINCREMENT, EnteryId , DocTitle, DocName, CreationDate);",
+                     "CREATE TABLE IF NOT EXISTS DealersNames (DealerNameId INTEGER PRIMARY KEY AUTOINCREMENT, DealerName);"
                  ],
                  function () {
-                     //showMessage('Your application is ready!');
+                     html5sql.process(
+                        [
+                            "SELECT DealerName FROM DealersNames"
+                        ],
+                        function (transaction, results, rowsArray) {
+                            var len = rowsArray.length, i;
+                            var dealersArray = [];
+
+                            if (len > 0) {
+                                for (var i = 0; i < len; i++) {
+                                    dealersArray.push({ value: rowsArray[i].DealerName, data: rowsArray[i].DealerName });
+                                }
+
+                                $("#txtDealer").autocomplete({
+                                    lookup: dealersArray,
+                                    onSelect: function (suggestion) {
+                                        
+                                    }
+                                });
+                            }
+                        },
+                        function (error, statement) {
+
+                        }
+                     );
                  },
                  function (error, statement) {
                      showMessage("Error: " + error.message + " when processing " + statement);
@@ -197,7 +223,11 @@
                         onclick="onSaveDocumentsClick();">Save</a>
                 </div>
             </div>
-            <br /><br /><br /><br /><hr />
+            <br />
+            <br />
+            <br />
+            <br />
+            <hr />
         </div>
         <div class="tabs tabs-positive tabs-icon-top">
             <a class="tab-item" href="index.html"><i class="icon ion-home" style="font-size: 25px;">
